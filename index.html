@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>にゃんこパニック</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Reggae+One&family=Yusei+Magic&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #222;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: sans-serif;
+            margin: 0;
+            padding: 0;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden; 
+            touch-action: manipulation;
+        }
+        #ui {
+            margin: 5px 0; 
+            text-align: center;
+        }
+        h2 { margin: 0; font-size: 24px; font-family: 'Dela Gothic One', 'Reggae One', sans-serif; letter-spacing: 2px; }
+        p { margin: 2px 0; font-size: 14px; font-weight: bold; }
+        
+        #scoreInfo {
+            background-color: rgba(0, 0, 0, 0.6); 
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            padding: 2px 15px;
+            margin-top: 2px;
+            display: inline-block;
+            font-weight: bold;
+            font-size: 16px;
+            color: #fff;
+        }
+        #scoreInfo span, #stageDisplay, #areaDisplay, #goalDisplay {
+            color: #fff !important;
+        }
+
+        #gameContainer {
+            position: relative;
+            display: inline-block;
+        }
+        canvas {
+            background-color: #000;
+            border: 2px solid #555;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            display: block;
+            width: 800px;
+            height: 600px; 
+            max-width: 100vw;
+            max-height: 80vh; 
+        }
+        
+        #startScreen {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            z-index: 100; cursor: pointer; color: white;
+            text-align: center;
+        }
+        #startScreen h1 { font-size: 48px; margin: 0 0 10px 0; color: #5599ff; font-family: 'Dela Gothic One', sans-serif; }
+        #startScreen p { font-size: 24px; animation: blink 1.5s infinite; font-weight: bold; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+        /* ゲーム開始前の説明動画リンク */
+        #gameDescLink {
+            margin-top: 40px;
+            font-size: 18px;
+            color: #ffcc00;
+            text-decoration: none;
+            border: 2px solid #ffcc00;
+            padding: 10px 25px;
+            border-radius: 8px;
+            background: rgba(0, 0, 0, 0.5);
+            transition: all 0.3s;
+            font-family: sans-serif;
+            z-index: 101; 
+        }
+        #gameDescLink:hover {
+            background: #ffcc00;
+            color: #000;
+            font-weight: bold;
+        }
+
+        /* ★追加: エンディング画面のチャンネル登録リンク */
+        #subscribeLink {
+            display: none; /* 初期状態は非表示 */
+            position: absolute;
+            bottom: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 18px;
+            color: #fff;
+            text-decoration: none;
+            border: 2px solid #ff0000;
+            padding: 8px 25px;
+            border-radius: 8px;
+            background: rgba(204, 0, 0, 0.8);
+            transition: all 0.3s;
+            font-family: sans-serif;
+            z-index: 101;
+            font-weight: bold;
+        }
+        #subscribeLink:hover {
+            background: #ff0000;
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.8);
+        }
+
+        #dpadContainer {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            z-index: 10;
+            touch-action: none;
+            cursor: pointer;
+            background-image: 
+                linear-gradient(0deg, transparent 49%, rgba(255,255,255,0.15) 49%, rgba(255,255,255,0.15) 51%, transparent 51%),
+                linear-gradient(90deg, transparent 49%, rgba(255,255,255,0.15) 49%, rgba(255,255,255,0.15) 51%, transparent 51%);
+        }
+        #dragHandle {
+            position: absolute;
+            top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 44px; height: 44px;
+            background: rgba(100, 150, 255, 0.6);
+            border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            color: white; font-size: 18px; cursor: move; user-select: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="ui">
+        <h2 id="uiTitle">にゃんこパニック</h2>
+        <p id="uiDesc">矢印キー or 画面パッドで移動して陣地を75%以上奪い取れ！</p>
+        <div id="scoreInfo">
+            <span><span id="uiStage">Stage: </span><span id="stageDisplay">01</span></span> | 
+            <span><span id="uiArea">Area: </span><span id="areaDisplay">0</span>%</span> / 
+            <span><span id="uiGoal">Goal: </span><span id="goalDisplay">75</span>%</span>
+        </div>
+    </div>
+    
+    <div id="gameContainer">
+        <div id="startScreen">
+            <h1 id="startTitle">にゃんこパニック</h1>
+            <p id="startMsg">画面をクリックして戦闘開始！</p>
+            <a href="https://youtube.com/@enjoy-battlecats" target="_blank" id="gameDescLink">ゲーム説明はこちら</a>
+        </div>
+
+        <canvas id="gameCanvas" width="800" height="600"></canvas>
+        
+        <!-- ★追加: エンディング時のチャンネル登録リンク（?sub_confirmation=1付き） -->
+        <a href="https://www.youtube.com/@enjoy-battlecats?sub_confirmation=1" target="_blank" id="subscribeLink">チャンネル登録はこちら</a>
+        
+        <audio id="bgm" preload="auto"></audio>
+        <audio id="audioStart" preload="auto"></audio>
+        <audio id="audioClear" preload="auto"></audio>
+        <audio id="audioGameOver" preload="auto"></audio>
+        <audio id="audioAllClear" preload="auto"></audio>
+        <audio id="audioCapture" preload="auto"></audio> 
+        <audio id="audioShock" preload="auto"></audio> 
+        
+        <div id="dpadContainer">
+            <div id="dragHandle" title="ドラッグして移動">✥</div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
