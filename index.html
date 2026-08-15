@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>にゃんこパニック</title>
+    <!-- タイトルを Enjoy Cats Panic に変更 -->
+    <title>Enjoy Cats Panic</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Reggae+One&family=Yusei+Magic&display=swap" rel="stylesheet">
@@ -73,9 +74,18 @@
         #startScreen p { font-size: 24px; animation: blink 1.5s infinite; font-weight: bold; }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
 
-        /* ゲーム開始前の説明動画リンク */
+        /* 追加: 免責事項のデザイン */
+        #disclaimer {
+            margin-top: 30px;
+            font-size: 12px;
+            color: #aaa;
+            line-height: 1.5;
+            font-weight: normal;
+            animation: none;
+        }
+
         #gameDescLink {
-            margin-top: 40px;
+            margin-top: 30px;
             font-size: 18px;
             color: #ffcc00;
             text-decoration: none;
@@ -93,9 +103,8 @@
             font-weight: bold;
         }
 
-        /* ★追加: エンディング画面のチャンネル登録リンク */
         #subscribeLink {
-            display: none; /* 初期状態は非表示 */
+            display: none; 
             position: absolute;
             bottom: 25px;
             left: 50%;
@@ -146,7 +155,8 @@
 </head>
 <body>
     <div id="ui">
-        <h2 id="uiTitle">にゃんこパニック</h2>
+        <!-- タイトルを Enjoy Cats Panic に変更 -->
+        <h2 id="uiTitle">Enjoy Cats Panic</h2>
         <p id="uiDesc">矢印キー or 画面パッドで移動して陣地を75%以上奪い取れ！</p>
         <div id="scoreInfo">
             <span><span id="uiStage">Stage: </span><span id="stageDisplay">01</span></span> | 
@@ -157,14 +167,19 @@
     
     <div id="gameContainer">
         <div id="startScreen">
-            <h1 id="startTitle">にゃんこパニック</h1>
+            <!-- タイトルを Enjoy Cats Panic に変更 -->
+            <h1 id="startTitle">Enjoy Cats Panic</h1>
             <p id="startMsg">画面をクリックして戦闘開始！</p>
             <a href="https://youtube.com/@enjoy-battlecats" target="_blank" id="gameDescLink">ゲーム説明はこちら</a>
+            <!-- 追加: 免責事項 -->
+            <p id="disclaimer">
+                ※本作はファンによる非公式の二次創作ゲームであり、ポノス株式会社様および「にゃんこ大戦争」公式とは一切関係ありません。<br>
+                *This is an unofficial fan-made game and is not affiliated with PONOS Corp. or the official "The Battle Cats".
+            </p>
         </div>
 
         <canvas id="gameCanvas" width="800" height="600"></canvas>
         
-        <!-- ★追加: エンディング時のチャンネル登録リンク（?sub_confirmation=1付き） -->
         <a href="https://www.youtube.com/@enjoy-battlecats?sub_confirmation=1" target="_blank" id="subscribeLink">チャンネル登録はこちら</a>
         
         <audio id="bgm" preload="auto"></audio>

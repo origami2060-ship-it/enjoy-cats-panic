@@ -1,18 +1,18 @@
 // --- 多言語辞書データ (13カ国語) ---
 const i18n = {
-    ja: { title: 'にゃんこパニック', desc: '矢印キー or 画面パッドで移動して陣地を75%以上奪い取れ！', startMsg: '画面をクリックして戦闘開始！', link: 'ゲーム説明はこちら', battleStart: '戦闘開始！', clear: '完全勝利！', next: 'クリック または Enterキー で次のステージへ', defeat: '敗北⋯', retry: 'クリック または Enterキー でリトライ', allClear: '全ステージクリア！！', thanks: '遊んでくれてありがとう！', freeTime: '結構暇なんだな！', restart: 'クリック または Enterキー で最初から', stage: 'Stage: ', area: 'Area: ', goal: 'Goal: ', subscribe: 'チャンネル登録はこちら' },
-    en: { title: 'Nyanko Panic', desc: 'Move with arrow keys or D-pad and capture 75%+ of the area!', startMsg: 'Click screen to start battle!', link: 'Game Instructions Here', battleStart: 'Battle Start!', clear: 'Perfect Victory!', next: 'Click or press Enter for next stage', defeat: 'Defeat...', retry: 'Click or press Enter to retry', allClear: 'All Stages Cleared!!', thanks: 'Thanks for playing!', freeTime: 'You must have a lot of free time!', restart: 'Click or press Enter to restart', stage: 'Stage: ', area: 'Area: ', goal: 'Goal: ', subscribe: 'Subscribe here' },
-    ko: { title: '냥코 패닉', desc: '방향키나 패드로 이동하여 75% 이상 영토를 차지하세요!', startMsg: '화면을 클릭하여 전투 시작!', link: '게임 설명은 여기를 클릭', battleStart: '전투 시작!', clear: '완전 승리!', next: '클릭 또는 Enter 키로 다음 스테이지로', defeat: '패배...', retry: '클릭 또는 Enter 키로 재시도', allClear: '모든 스테이지 클리어!!', thanks: '플레이해주셔서 감사합니다!', freeTime: '시간이 참 많으신가 보네요!', restart: '클릭 또는 Enter 키로 처음부터', stage: 'Stage: ', area: 'Area: ', goal: 'Goal: ', subscribe: '구독하기' },
-    'zh-tw': { title: '貓咪大恐慌', desc: '使用方向鍵或搖桿移動，佔領75%以上的領地！', startMsg: '點擊螢幕開始戰鬥！', link: '遊戲說明請點此', battleStart: '戰鬥開始！', clear: '完全勝利！', next: '點擊或按 Enter 鍵進入下一關', defeat: '敗北⋯', retry: '點擊或按 Enter 鍵重試', allClear: '全關卡破關！！', thanks: '感謝遊玩！', freeTime: '看來你真的很閒呢！', restart: '點擊或按 Enter 鍵從頭開始', stage: 'Stage: ', area: 'Area: ', goal: 'Goal: ', subscribe: '訂閱本頻道' },
-    es: { title: 'Nyanko Panic', desc: '¡Muévete con flechas o pad y captura el 75%+ del área!', startMsg: '¡Haz clic para iniciar!', link: 'Instrucciones aquí', battleStart: '¡Empieza la batalla!', clear: '¡Victoria perfecta!', next: 'Haz clic o Enter para la siguiente fase', defeat: 'Derrota...', retry: 'Haz clic o Enter para reintentar', allClear: '¡Todas las fases superadas!', thanks: '¡Gracias por jugar!', freeTime: '¡Debes tener mucho tiempo libre!', restart: 'Haz clic o Enter para reiniciar', stage: 'Stage: ', area: 'Area: ', goal: 'Goal: ', subscribe: 'Suscríbete aquí' },
-    pt: { title: 'Nyanko Panic', desc: 'Mova com as setas ou pad e capture 75%+ da área!', startMsg: 'Clique na tela para começar!', link: 'Instruções do jogo aqui', battleStart: 'Batalha começou!', clear: 'Vitória Perfeita!', next: 'Clique ou Enter para próxima fase', defeat: 'Derrota...', retry: 'Clique ou Enter para tentar de novo', allClear: 'Todas as fases concluídas!!', thanks: 'Obrigado por jogar!', freeTime: 'Você deve ter muito tempo livre!', restart: 'Clique ou Enter para recomeçar', stage: 'Stage: ', area: 'Area: ', goal: 'Goal: ', subscribe: 'Inscreva-se aqui' },
-    fr: { title: 'Nyanko Panic', desc: 'Utilisez les flèches ou le pad pour capturer 75%+ !', startMsg: 'Cliquez pour commencer !', link: 'Instructions du jeu ici', battleStart: 'Début du combat !', clear: 'Victoire parfaite !', next: 'Cliquez ou Entrée pour la suite', defeat: 'Défaite...', retry: 'Cliquez ou Entrée pour réessayer', allClear: 'Toutes les étapes terminées !!', thanks: 'Merci d\'avoir joué !', freeTime: 'Vous avez beaucoup de temps libre !', restart: 'Cliquez ou Entrée pour recommencer', stage: 'Stage: ', area: 'Area: ', goal: 'Goal: ', subscribe: 'Abonnez-vous ici' },
-    de: { title: 'Nyanko Panic', desc: 'Bewege dich und erobere 75%+ der Fläche!', startMsg: 'Klicke zum Starten!', link: 'Spielanleitung hier', battleStart: 'Kampfbeginn!', clear: 'Perfekter Sieg!', next: 'Klicken oder Enter für nächste Stufe', defeat: 'Niederlage...', retry: 'Klicken oder Enter für Neustart', allClear: 'Alle Stufen abgeschlossen!!', thanks: 'Danke fürs Spielen!', freeTime: 'Du hast wohl viel Freizeit!', restart: 'Klicken oder Enter für Neustart', stage: 'Stage: ', area: 'Area: ', goal: 'Goal: ', subscribe: 'Hier abonnieren' },
-    it: { title: 'Nyanko Panic', desc: 'Muoviti e cattura il 75%+ dell\'area!', startMsg: 'Clicca per iniziare!', link: 'Istruzioni qui', battleStart: 'Inizio battaglia!', clear: 'Vittoria perfetta!', next: 'Clicca o Invio per il prossimo livello', defeat: 'Sconfitta...', retry: 'Clicca o Invio per riprovare', allClear: 'Tutti i livelli completati!!', thanks: 'Grazie per aver giocato!', freeTime: 'Devi avere molto tempo libero!', restart: 'Clicca o Invio per ricominciare', stage: 'Stage: ', area: 'Area: ', goal: 'Goal: ', subscribe: 'Iscriviti qui' },
-    id: { title: 'Nyanko Panic', desc: 'Bergerak dan rebut 75%+ area!', startMsg: 'Klik layar untuk mulai!', link: 'Cara bermain di sini', battleStart: 'Pertarungan Mulai!', clear: 'Kemenangan Sempurna!', next: 'Klik atau Enter ke stage berikutnya', defeat: 'Kalah...', retry: 'Klik atau Enter untuk mencoba lagi', allClear: 'Semua Stage Selesai!!', thanks: 'Terima kasih sudah bermain!', freeTime: 'Kamu pasti punya banyak waktu luang!', restart: 'Klik atau Enter untuk mengulang', stage: 'Stage: ', area: 'Area: ', goal: 'Goal: ', subscribe: 'Berlangganan di sini' },
-    th: { title: 'Nyanko Panic', desc: 'ยึดพื้นที่ให้ได้ 75%+!', startMsg: 'คลิกเพื่อเริ่มการต่อสู้!', link: 'คำอธิบายเกมอยู่ที่นี่', battleStart: 'เริ่มการต่อสู้!', clear: 'ชนะอย่างสมบูรณ์แบบ!', next: 'คลิกหรือกด Enter เพื่อไปด่านต่อไป', defeat: 'พ่ายแพ้...', retry: 'คลิกหรือกด Enter เพื่อลองใหม่', allClear: 'เคลียร์ทุกด่านแล้ว!!', thanks: 'ขอบคุณที่เล่นนะ!', freeTime: 'สงสัยจะว่างมากสิท่า!', restart: 'คลิกหรือกด Enter เพื่อเริ่มใหม่', stage: 'Stage: ', area: 'Area: ', goal: 'Goal: ', subscribe: 'กดติดตามที่นี่' },
-    vi: { title: 'Nyanko Panic', desc: 'Di chuyển và chiếm 75%+ diện tích!', startMsg: 'Nhấn để bắt đầu!', link: 'Hướng dẫn trò chơi', battleStart: 'Trận chiến bắt đầu!', clear: 'Chiến thắng hoàn hảo!', next: 'Nhấn hoặc Enter cho màn tiếp theo', defeat: 'Thất bại...', retry: 'Nhấn hoặc Enter để thử lại', allClear: 'Hoàn thành tất cả màn!!', thanks: 'Cảm ơn bạn đã chơi!', freeTime: 'Chắc bạn có nhiều thời gian rảnh lắm!', restart: 'Nhấn hoặc Enter để chơi lại', stage: 'Stage: ', area: 'Area: ', goal: 'Goal: ', subscribe: 'Đăng ký tại đây' },
-    ru: { title: 'Nyanko Panic', desc: 'Двигайтесь и захватите 75%+ территории!', startMsg: 'Кликните для начала!', link: 'Инструкции к игре здесь', battleStart: 'Бой начинается!', clear: 'Идеальная победа!', next: 'Клик или Enter для следующего уровня', defeat: 'Поражение...', retry: 'Клик или Enter для повтора', allClear: 'Все уровни пройдены!!', thanks: 'Спасибо за игру!', freeTime: 'У тебя, видимо, много свободного времени!', restart: 'Клик или Enter для перезапуска', stage: 'Stage: ', area: 'Area: ', goal: 'Goal: ', subscribe: 'Подписаться' }
+    ja: { desc: '矢印キー or 画面パッドで移動して陣地を75%以上奪い取れ！', startMsg: '画面をクリックして戦闘開始！', link: 'ゲーム説明はこちら', battleStart: '戦闘開始！', clear: '完全勝利！', next: 'クリック または Enterキー で次のステージへ', defeat: '敗北⋯', retry: 'クリック または Enterキー でリトライ', allClear: '全ステージクリア！！', thanks: '遊んでくれてありがとう！', freeTime: '結構暇なんだな！', restart: 'クリック または Enterキー で最初から', stage: 'Stage: ', area: 'Area: ', goal: 'Goal: ', subscribe: 'チャンネル登録はこちら' },
+    en: { desc: 'Move with arrow keys or D-pad and capture 75%+ of the area!', startMsg: 'Click screen to start battle!', link: 'Game Instructions Here', battleStart: 'Battle Start!', clear: 'Perfect Victory!', next: 'Click or press Enter for next stage', defeat: 'Defeat...', retry: 'Click or press Enter to retry', allClear: 'All Stages Cleared!!', thanks: 'Thanks for playing!', freeTime: 'You must have a lot of free time!', restart: 'Click or press Enter to restart', stage: 'Stage: ', area: 'Area: ', goal: 'Goal: ', subscribe: 'Subscribe here' },
+    ko: { desc: '방향키나 패드로 이동하여 75% 이상 영토를 차지하세요!', startMsg: '화면을 클릭하여 전투 시작!', link: '게임 설명은 여기를 클릭', battleStart: '전투 시작!', clear: '완전 승리!', next: '클릭 또는 Enter 키로 다음 스테이지로', defeat: '패배...', retry: '클릭 또는 Enter 키로 재시도', allClear: '모든 스테이지 클리어!!', thanks: '플레이해주셔서 감사합니다!', freeTime: '시간이 참 많으신가 보네요!', restart: '클릭 또는 Enter 키로 처음부터', stage: 'Stage: ', area: 'Area: ', goal: 'Goal: ', subscribe: '구독하기' },
+    'zh-tw': { desc: '使用方向鍵或搖桿移動，佔領75%以上的領地！', startMsg: '點擊螢幕開始戰鬥！', link: '遊戲說明請點此', battleStart: '戰鬥開始！', clear: '完全勝利！', next: '點擊或按 Enter 鍵進入下一關', defeat: '敗北⋯', retry: '點擊或按 Enter 鍵重試', allClear: '全關卡破關！！', thanks: '感謝遊玩！', freeTime: '看來你真的很閒呢！', restart: '點擊或按 Enter 鍵從頭開始', stage: 'Stage: ', area: 'Area: ', goal: 'Goal: ', subscribe: '訂閱本頻道' },
+    es: { desc: '¡Muévete con flechas o pad y captura el 75%+ del área!', startMsg: '¡Haz clic para iniciar!', link: 'Instrucciones aquí', battleStart: '¡Empieza la batalla!', clear: '¡Victoria perfecta!', next: 'Haz clic o Enter para la siguiente fase', defeat: 'Derrota...', retry: 'Haz clic o Enter para reintentar', allClear: '¡Todas las fases superadas!', thanks: '¡Gracias por jugar!', freeTime: '¡Debes tener mucho tiempo libre!', restart: 'Haz clic o Enter para reiniciar', stage: 'Stage: ', area: 'Area: ', goal: 'Goal: ', subscribe: 'Suscríbete aquí' },
+    pt: { desc: 'Mova com as setas ou pad e capture 75%+ da área!', startMsg: 'Clique na tela para começar!', link: 'Instruções do jogo aqui', battleStart: 'Batalha começou!', clear: 'Vitória Perfeita!', next: 'Clique ou Enter para próxima fase', defeat: 'Derrota...', retry: 'Clique ou Enter para tentar de novo', allClear: 'Todas as fases concluídas!!', thanks: 'Obrigado por jogar!', freeTime: 'Você deve ter muito tempo livre!', restart: 'Clique ou Enter para recomeçar', stage: 'Stage: ', area: 'Area: ', goal: 'Goal: ', subscribe: 'Inscreva-se aqui' },
+    fr: { desc: 'Utilisez les flèches ou le pad pour capturer 75%+ !', startMsg: 'Cliquez pour commencer !', link: 'Instructions du jeu ici', battleStart: 'Début du combat !', clear: 'Victoire parfaite !', next: 'Cliquez ou Entrée pour la suite', defeat: 'Défaite...', retry: 'Cliquez ou Entrée pour réessayer', allClear: 'Toutes les étapes terminées !!', thanks: 'Merci d\'avoir joué !', freeTime: 'Vous avez beaucoup de temps libre !', restart: 'Cliquez ou Entrée pour recommencer', stage: 'Stage: ', area: 'Area: ', goal: 'Goal: ', subscribe: 'Abonnez-vous ici' },
+    de: { desc: 'Bewege dich und erobere 75%+ der Fläche!', startMsg: 'Klicke zum Starten!', link: 'Spielanleitung hier', battleStart: 'Kampfbeginn!', clear: 'Perfekter Sieg!', next: 'Klicken oder Enter für nächste Stufe', defeat: 'Niederlage...', retry: 'Klicken oder Enter für Neustart', allClear: 'Alle Stufen abgeschlossen!!', thanks: 'Danke fürs Spielen!', freeTime: 'Du hast wohl viel Freizeit!', restart: 'Klicken oder Enter für Neustart', stage: 'Stage: ', area: 'Area: ', goal: 'Goal: ', subscribe: 'Hier abonnieren' },
+    it: { desc: 'Muoviti e cattura il 75%+ dell\'area!', startMsg: 'Clicca per iniziare!', link: 'Istruzioni qui', battleStart: 'Inizio battaglia!', clear: 'Vittoria perfetta!', next: 'Clicca o Invio per il prossimo livello', defeat: 'Sconfitta...', retry: 'Clicca o Invio per riprovare', allClear: 'Tutti i livelli completati!!', thanks: 'Grazie per aver giocato!', freeTime: 'Devi avere molto tempo libero!', restart: 'Clicca o Invio per ricominciare', stage: 'Stage: ', area: 'Area: ', goal: 'Goal: ', subscribe: 'Iscriviti qui' },
+    id: { desc: 'Bergerak dan rebut 75%+ area!', startMsg: 'Klik layar untuk mulai!', link: 'Cara bermain di sini', battleStart: 'Pertarungan Mulai!', clear: 'Kemenangan Sempurna!', next: 'Klik atau Enter ke stage berikutnya', defeat: 'Kalah...', retry: 'Klik atau Enter untuk mencoba lagi', allClear: 'Semua Stage Selesai!!', thanks: 'Terima kasih sudah bermain!', freeTime: 'Kamu pasti punya banyak waktu luang!', restart: 'Klik atau Enter untuk mengulang', stage: 'Stage: ', area: 'Area: ', goal: 'Goal: ', subscribe: 'Berlangganan di sini' },
+    th: { desc: 'ยึดพื้นที่ให้ได้ 75%+!', startMsg: 'คลิกเพื่อเริ่มการต่อสู้!', link: 'คำอธิบายเกมอยู่ที่นี่', battleStart: 'เริ่มการต่อสู้!', clear: 'ชนะอย่างสมบูรณ์แบบ!', next: 'คลิกหรือกด Enter เพื่อไปด่านต่อไป', defeat: 'พ่ายแพ้...', retry: 'คลิกหรือกด Enter เพื่อลองใหม่', allClear: 'เคลียร์ทุกด่านแล้ว!!', thanks: 'ขอบคุณที่เล่นนะ!', freeTime: 'สงสัยจะว่างมากสิท่า!', restart: 'คลิกหรือกด Enter เพื่อเริ่มใหม่', stage: 'Stage: ', area: 'Area: ', goal: 'Goal: ', subscribe: 'กดติดตามที่นี่' },
+    vi: { desc: 'Di chuyển và chiếm 75%+ diện tích!', startMsg: 'Nhấn để bắt đầu!', link: 'Hướng dẫn trò chơi', battleStart: 'Trận chiến bắt đầu!', clear: 'Chiến thắng hoàn hảo!', next: 'Nhấn hoặc Enter cho màn tiếp theo', defeat: 'Thất bại...', retry: 'Nhấn hoặc Enter để thử lại', allClear: 'Hoàn thành tất cả màn!!', thanks: 'Cảm ơn bạn đã chơi!', freeTime: 'Chắc bạn có nhiều thời gian rảnh lắm!', restart: 'Nhấn hoặc Enter để chơi lại', stage: 'Stage: ', area: 'Area: ', goal: 'Goal: ', subscribe: 'Đăng ký tại đây' },
+    ru: { desc: 'Двигайтесь и захватите 75%+ территории!', startMsg: 'Кликните для начала!', link: 'Инструкции к игре здесь', battleStart: 'Бой начинается!', clear: 'Идеальная победа!', next: 'Клик или Enter для следующего уровня', defeat: 'Поражение...', retry: 'Клик или Enter для повтора', allClear: 'Все уровни пройдены!!', thanks: 'Спасибо за игру!', freeTime: 'У тебя, видимо, много свободного времени!', restart: 'Клик или Enter для перезапуска', stage: 'Stage: ', area: 'Area: ', goal: 'Goal: ', subscribe: 'Подписаться' }
 };
 
 let rawLang = (navigator.language || navigator.userLanguage || 'en').toLowerCase();
@@ -42,8 +42,6 @@ function getFontFamily(weight = 'normal') {
     return 'sans-serif'; 
 }
 
-
-// --- グローバル変数と初期設定 ---
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas ? canvas.getContext('2d') : null;
 
@@ -131,7 +129,6 @@ function renderGridToBg() {
     bgCtx.putImageData(bgImageData, 0, 0);
 }
 
-// --- 音響管理ロジック ---
 const STATE_SOUNDS_CONFIG = { 
     start: 'start_game', clear: 'stage_clear', over: 'game_over', all_clear: 'all_clear', capture: 'capture', shock: 'shock'
 };
@@ -519,8 +516,6 @@ function drawCoolText(text, x, y, baseFontSize, hasGradient = true, weight = 'bo
     ctx.shadowBlur = 0; ctx.shadowOffsetX = 0; ctx.shadowOffsetY = 0;
 }
 
-
-// --- メインループ ---
 function gameLoop() {
     if (!ctx) return;
     animationFrameCount++; 
@@ -597,12 +592,10 @@ function gameLoop() {
             drawCoolText(t.thanks, gridWidth / 2, gridHeight / 2 + 80, 36, false, 'rough', '#fff');
             drawCoolText(t.freeTime, gridWidth / 2, gridHeight / 2 + 150, 48, false, 'rough', '#ff6666');
             
-            // ★追加: リンクと被らないようにテキストを少し上(y=510)に配置
             ctx.fillStyle = '#fff'; ctx.font = `20px ${getFontFamily('normal')}`; ctx.lineWidth = 1; ctx.strokeStyle = '#000';
             ctx.strokeText(t.restart, gridWidth / 2, gridHeight / 2 + 210);
             ctx.fillText(t.restart, gridWidth / 2, gridHeight / 2 + 210);
 
-            // ★追加: チャンネル登録リンクを表示
             let subLink = document.getElementById('subscribeLink');
             if(subLink && subLink.style.display !== 'block') {
                 subLink.style.display = 'block';
@@ -615,7 +608,6 @@ function gameLoop() {
 async function loadStage(index) {
     const MAX_STAGES = stages.length; 
 
-    // ★追加: 新しいステージ(または最初から)をロードする時は登録リンクを消す
     let subLink = document.getElementById('subscribeLink');
     if(subLink) subLink.style.display = 'none';
 
@@ -692,8 +684,6 @@ function finalizeLoadAndPlay() {
     }
 }
 
-
-// --- 入力・キャラクター移動管理 ---
 const keys = { ArrowUp: false, ArrowDown: false, ArrowLeft: false, ArrowRight: false };
 
 function startGameFromScreen(e) {
@@ -734,16 +724,13 @@ function setupInputListeners() {
             if (e.key === 'Enter') { currentStageIndex++; loadStage(currentStageIndex); }
         } else if (['gameover', 'all_clear', 'all_clear_part1', 'all_clear_part2'].includes(gameState)) {
             if (e.key === 'Enter') { 
-                // ★追加: 登録リンクにフォーカスがある状態でEnterを押した場合はリスタートさせない（リンク遷移を優先）
                 if (document.activeElement && document.activeElement.id === 'subscribeLink') return;
-                
                 currentStageIndex = 0; loadStage(currentStageIndex); 
             }
         }
     });
     window.addEventListener('keyup', (e) => { if (keys.hasOwnProperty(e.key)) keys[e.key] = false; });
     window.addEventListener('mousedown', (e) => {
-        // ★修正: クリックした要素が登録リンクの場合は、リスタートの判定処理を無視する
         if (e.target.id === 'dragHandle' || e.target.id === 'dpadContainer' || e.target.id === 'startScreen' || e.target.closest('#startScreen') || e.target.id === 'subscribeLink') return;
         handleScreenClick();
     });
@@ -936,15 +923,11 @@ function updateEnemy() {
 
 // 起動時にHTMLテキストへ翻訳データを反映
 window.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('uiTitle').innerText = t.title;
+    // titleの書き換えを削除し、HTML側の「Enjoy Cats Panic」で固定
     document.getElementById('uiDesc').innerText = t.desc;
-    document.getElementById('startTitle').innerText = t.title;
     document.getElementById('startMsg').innerText = t.startMsg;
     document.getElementById('gameDescLink').innerText = t.link;
-    
-    // ★追加: エンディングのチャンネル登録リンクの翻訳テキストを設定
     document.getElementById('subscribeLink').innerText = t.subscribe;
-
     document.getElementById('uiStage').innerText = t.stage;
     document.getElementById('uiArea').innerText = t.area;
     document.getElementById('uiGoal').innerText = t.goal;
