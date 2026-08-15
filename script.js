@@ -1,5 +1,4 @@
 // --- 多言語辞書データ (13カ国語) ---
-// ★修正: 説明文（desc）を<br>タグを使って5〜6行に分割し、UIラベルを追加
 const i18n = {
     ja: { desc: '矢印キー or<br>画面パッドで<br>移動して<br>陣地を<br>75%以上<br>奪い取れ！', startMsg: '画面をクリックして戦闘開始！', link: 'ゲーム説明はこちら', battleStart: '戦闘開始！', clear: '完全勝利！', next: 'クリック または Enterキー で次のステージへ', defeat: '敗北⋯', retry: 'クリック または Enterキー でリトライ', allClear: '全ステージクリア！！', thanks: '遊んでくれてありがとう！', freeTime: '結構暇なんだな！', restart: 'クリック または Enterキー で最初から', stage: 'Stage', area: 'Area', goal: 'Goal', time: 'Time', subscribe: 'チャンネル登録はこちら' },
     en: { desc: 'Move with<br>arrow keys<br>or D-pad<br>and capture<br>75%+<br>of the area!', startMsg: 'Click screen to start battle!', link: 'Game Instructions Here', battleStart: 'Battle Start!', clear: 'Perfect Victory!', next: 'Click or press Enter for next stage', defeat: 'Defeat...', retry: 'Click or press Enter to retry', allClear: 'All Stages Cleared!!', thanks: 'Thanks for playing!', freeTime: 'You must have a lot of free time!', restart: 'Click or press Enter to restart', stage: 'Stage', area: 'Area', goal: 'Goal', time: 'Time', subscribe: 'Subscribe here' },
@@ -52,32 +51,21 @@ const goalDisplay = document.getElementById('goalDisplay');
 const startScreen = document.getElementById('startScreen');
 
 const audioElements = {
-    bgm: document.getElementById('bgm'),
-    start: document.getElementById('audioStart'),
-    clear: document.getElementById('audioClear'),
-    over: document.getElementById('audioGameOver'),
-    allClear: document.getElementById('audioAllClear'),
-    capture: document.getElementById('audioCapture'),
-    shock: document.getElementById('audioShock') 
+    bgm: document.getElementById('bgm'), start: document.getElementById('audioStart'), clear: document.getElementById('audioClear'),
+    over: document.getElementById('audioGameOver'), allClear: document.getElementById('audioAllClear'),
+    capture: document.getElementById('audioCapture'), shock: document.getElementById('audioShock') 
 };
 
-const startLogoImg = new Image();
-startLogoImg.src = './assets/start_logo.png'; 
-const endingImg = new Image();
-endingImg.src = './assets/Ending.png'; 
+const startLogoImg = new Image(); startLogoImg.src = './assets/start_logo.png'; 
+const endingImg = new Image(); endingImg.src = './assets/Ending.png'; 
 
 let gameState = 'start_screen'; 
 let currentPercentage = 0; 
 let currentStageIndex = 0;
 let animationFrameCount = 0;
 
-const stages = [
-    { goal: 75, enemySpeed: 3 }, 
-    { goal: 75, enemySpeed: 5 }, 
-    { goal: 75, enemySpeed: 6 }  
-];
-let currentBgImg = new Image();
-let stageImageData = null;
+const stages = [ { goal: 75, enemySpeed: 3 }, { goal: 75, enemySpeed: 5 }, { goal: 75, enemySpeed: 6 } ];
+let currentBgImg = new Image(); let stageImageData = null;
 
 const characterAssets = {
     player: { images: [], isLoaded: false, lastDirection: 'right' },
@@ -87,87 +75,52 @@ const characterAssets = {
 const player = { x: 0, y: 0, size: 60, speed: 3, color: '#00f', isDrawing: false, path: [] };
 const enemy = { x: 0, y: 0, size: 80, speedX: 0, speedY: 0, color: '#f00' };
 
-const gridWidth = 800; 
-const gridHeight = 600; 
+const gridWidth = 800; const gridHeight = 600; 
 const grid = new Uint8Array(gridWidth * gridHeight);
-let totalPlayablePixels = 0;
-const margin = 35; 
+let totalPlayablePixels = 0; const margin = 35; 
 
-const bgCanvas = document.createElement('canvas');
-bgCanvas.width = gridWidth;
-bgCanvas.height = gridHeight;
-const bgCtx = bgCanvas.getContext('2d');
-let bgImageData = bgCtx.createImageData(gridWidth, gridHeight);
+const bgCanvas = document.createElement('canvas'); bgCanvas.width = gridWidth; bgCanvas.height = gridHeight;
+const bgCtx = bgCanvas.getContext('2d'); let bgImageData = bgCtx.createImageData(gridWidth, gridHeight);
 
-
-// ★追加: 総経過時間のタイマー管理ロジック
-let gameStartTime = 0;
-let totalElapsedTime = 0;
-let timerInterval = null;
+let gameStartTime = 0; let totalElapsedTime = 0; let timerInterval = null;
 
 function startTimer() {
     if (timerInterval) clearInterval(timerInterval);
     gameStartTime = Date.now() - totalElapsedTime;
     timerInterval = setInterval(() => {
-        // プレイ中やクリア演出中のみ時間を加算する
         if (['playing', 'stage_start_anim', 'clear'].includes(gameState)) {
-            totalElapsedTime = Date.now() - gameStartTime;
-            updateTimerDisplay();
+            totalElapsedTime = Date.now() - gameStartTime; updateTimerDisplay();
         }
     }, 200);
 }
-
-function stopTimer() {
-    if (timerInterval) clearInterval(timerInterval);
-    timerInterval = null;
-}
-
-function resetTimer() {
-    totalElapsedTime = 0;
-    updateTimerDisplay();
-}
-
+function stopTimer() { if (timerInterval) clearInterval(timerInterval); timerInterval = null; }
+function resetTimer() { totalElapsedTime = 0; updateTimerDisplay(); }
 function updateTimerDisplay() {
     let totalSeconds = Math.floor(totalElapsedTime / 1000);
     let m = Math.floor(totalSeconds / 60).toString().padStart(2, '0');
     let s = (totalSeconds % 60).toString().padStart(2, '0');
     let timeStr = `${m}:${s}`;
-    let el = document.getElementById('timeDisplay');
-    if (el) el.innerText = timeStr;
-    return timeStr; // エンディング表示用にも文字列を返す
+    let el = document.getElementById('timeDisplay'); if (el) el.innerText = timeStr;
+    return timeStr; 
 }
-
 
 function renderGridToBg() {
     for (let i = 0; i < grid.length; i++) {
         let idx = i * 4;
         if (grid[i] === 0) {
-            if (stageImageData) {
-                bgImageData.data[idx] = stageImageData.data[idx];
-                bgImageData.data[idx+1] = stageImageData.data[idx+1];
-                bgImageData.data[idx+2] = stageImageData.data[idx+2];
-            } else {
-                bgImageData.data[idx] = 0; bgImageData.data[idx+1] = 0; bgImageData.data[idx+2] = 128;
-            }
+            if (stageImageData) { bgImageData.data[idx] = stageImageData.data[idx]; bgImageData.data[idx+1] = stageImageData.data[idx+1]; bgImageData.data[idx+2] = stageImageData.data[idx+2]; } 
+            else { bgImageData.data[idx] = 0; bgImageData.data[idx+1] = 0; bgImageData.data[idx+2] = 128; }
             bgImageData.data[idx+3] = 255;
-        } else if (grid[i] === 3) {
-            bgImageData.data[idx] = 0; bgImageData.data[idx+1] = 0; bgImageData.data[idx+2] = 255; bgImageData.data[idx+3] = 255;
-        } else if (grid[i] === 4) {
-            bgImageData.data[idx] = 255; bgImageData.data[idx+1] = 255; bgImageData.data[idx+2] = 255; bgImageData.data[idx+3] = 255;
-        } else {
-            bgImageData.data[idx] = 0; bgImageData.data[idx+1] = 0; bgImageData.data[idx+2] = 0; bgImageData.data[idx+3] = 255;
-        }
+        } else if (grid[i] === 3) { bgImageData.data[idx] = 0; bgImageData.data[idx+1] = 0; bgImageData.data[idx+2] = 255; bgImageData.data[idx+3] = 255; } 
+        else if (grid[i] === 4) { bgImageData.data[idx] = 255; bgImageData.data[idx+1] = 255; bgImageData.data[idx+2] = 255; bgImageData.data[idx+3] = 255; } 
+        else { bgImageData.data[idx] = 0; bgImageData.data[idx+1] = 0; bgImageData.data[idx+2] = 0; bgImageData.data[idx+3] = 255; }
     }
     bgCtx.putImageData(bgImageData, 0, 0);
 }
 
 const STATE_SOUNDS_CONFIG = { start: 'start_game', clear: 'stage_clear', over: 'game_over', all_clear: 'all_clear', capture: 'capture', shock: 'shock' };
 function formatStageNumber(num) { return String(num + 1).padStart(2, '0'); }
-function setupStageBGM(index) {
-    const bgm = audioElements.bgm; if (!bgm) return;
-    let numStr = formatStageNumber(index);
-    bgm.src = `./assets/bgm${numStr}.mp3`; bgm.load();
-}
+function setupStageBGM(index) { const bgm = audioElements.bgm; if (!bgm) return; let numStr = formatStageNumber(index); bgm.src = `./assets/bgm${numStr}.mp3`; bgm.load(); }
 function stopBGM() { if (audioElements.bgm) { audioElements.bgm.pause(); audioElements.bgm.currentTime = 0; } }
 function stopAllSounds() { Object.values(audioElements).forEach(el => { if (!el) return; el.pause(); el.currentTime = 0; el.onended = null; }); }
 
@@ -183,8 +136,7 @@ function unlockAudioContext() {
 function playSoundAndWait(el) {
     return new Promise((resolve) => {
         if (!el || !isAudioUnlocked) { resolve(); return; }
-        el.loop = false; el.currentTime = 0;
-        el.onended = () => { el.onended = null; resolve(); };
+        el.loop = false; el.currentTime = 0; el.onended = () => { el.onended = null; resolve(); };
         el.play().catch(e => { el.onended = null; resolve(); });
     });
 }
@@ -203,11 +155,8 @@ async function playStageAudioSequence() {
 }
 
 async function playAllClearSequence() {
-    if (!isAudioUnlocked) return; stopAllSounds();
-    // ★追加: 全クリア演出開始と同時にタイマーをストップし、タイムを確定させる
-    stopTimer();
-    gameState = 'all_clear_part1'; 
-    await playSoundAndWait(audioElements.clear);
+    if (!isAudioUnlocked) return; stopAllSounds(); stopTimer();
+    gameState = 'all_clear_part1'; await playSoundAndWait(audioElements.clear);
     if (gameState === 'all_clear_part1') { gameState = 'all_clear_part2'; playSoundRobust(audioElements.allClear); }
 }
 
@@ -264,12 +213,9 @@ function loadCharacterImagesRobust(characterType, enemyCharId = null) {
         if (enemyCharId) assetObj.charId = enemyCharId; 
         let loadedCount = 0; const framesToLoad = 4; 
         for (let i = 1; i <= framesToLoad; i++) {
-            let img = new Image();
-            img.onload = () => { loadedCount++; if (loadedCount === framesToLoad) { assetObj.isLoaded = true; resolve(); } };
-            img.onerror = () => { resolve(); };
+            let img = new Image(); img.onload = () => { loadedCount++; if (loadedCount === framesToLoad) { assetObj.isLoaded = true; resolve(); } }; img.onerror = () => { resolve(); };
             let frameStr = String(i).padStart(2, '0'); 
-            if (characterType === 'player') img.src = `./assets/player_${frameStr}.png`;
-            else img.src = `./assets/enemy_${enemyCharId}_${frameStr}.png`;
+            if (characterType === 'player') img.src = `./assets/player_${frameStr}.png`; else img.src = `./assets/enemy_${enemyCharId}_${frameStr}.png`;
             assetObj.images.push(img);
         }
     });
@@ -289,87 +235,57 @@ function loadImageRobust(src) {
 function distToSegment(px, py, x1, y1, x2, y2) {
     let l2 = (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1);
     if (l2 === 0) return Math.sqrt((px - x1) * (px - x1) + (py - y1) * (py - y1));
-    let t = ((px - x1) * (x2 - x1) + (py - y1) * (y2 - y1)) / l2;
-    t = Math.max(0, Math.min(1, t)); let projX = x1 + t * (x2 - x1); let projY = y1 + t * (y2 - y1);
+    let t = ((px - x1) * (x2 - x1) + (py - y1) * (y2 - y1)) / l2; t = Math.max(0, Math.min(1, t)); let projX = x1 + t * (x2 - x1); let projY = y1 + t * (y2 - y1);
     return Math.sqrt((px - projX) * (px - projX) + (py - projY) * (py - projY));
 }
 function markLineOnGrid(x0, y0, x1, y1, value) {
-    let dx = Math.abs(x1 - x0), sx = x0 < x1 ? 1 : -1;
-    let dy = -Math.abs(y1 - y0), sy = y0 < y1 ? 1 : -1;
-    let err = dx + dy, e2;
+    let dx = Math.abs(x1 - x0), sx = x0 < x1 ? 1 : -1; let dy = -Math.abs(y1 - y0), sy = y0 < y1 ? 1 : -1; let err = dx + dy, e2;
     while (true) {
-        for (let oy = -1; oy <= 1; oy++) {
-            for (let ox = -1; ox <= 1; ox++) {
-                let nx = x0 + ox, ny = y0 + oy;
-                if (nx >= 0 && nx < gridWidth && ny >= 0 && ny < gridHeight) grid[ny * gridWidth + nx] = value;
-            }
-        }
-        if (x0 === x1 && y0 === y1) break;
-        e2 = 2 * err;
-        if (e2 >= dy) { err += dy; x0 += sx; }
-        if (e2 <= dx) { err += dx; y0 += sy; }
+        for (let oy = -1; oy <= 1; oy++) { for (let ox = -1; ox <= 1; ox++) { let nx = x0 + ox, ny = y0 + oy; if (nx >= 0 && nx < gridWidth && ny >= 0 && ny < gridHeight) grid[ny * gridWidth + nx] = value; } }
+        if (x0 === x1 && y0 === y1) break; e2 = 2 * err; if (e2 >= dy) { err += dy; x0 += sx; } if (e2 <= dx) { err += dx; y0 += sy; }
     }
 }
 
 function processCapture() {
     let lineDrawn = player.path.length > 1; 
     for (let i = 0; i < player.path.length - 1; i++) { markLineOnGrid(player.path[i].x, player.path[i].y, player.path[i+1].x, player.path[i+1].y, 3); }
-    let ex = Math.floor(enemy.x), ey = Math.floor(enemy.y);
-    let startX = -1, startY = -1;
+    let ex = Math.floor(enemy.x), ey = Math.floor(enemy.y); let startX = -1, startY = -1;
     if (grid[ey * gridWidth + ex] === 1) { startX = ex; startY = ey; } 
     else {
         let searchRadius = 30;
-        outer: for(let r = 1; r <= searchRadius; r++) {
-            for(let dy = -r; dy <= r; dy++) {
-                for(let dx = -r; dx <= r; dx++) {
-                    let nx = ex + dx, ny = ey + dy;
-                    if (nx >= 0 && nx < gridWidth && ny >= 0 && ny < gridHeight && grid[ny * gridWidth + nx] === 1) { startX = nx; startY = ny; break outer; }
-                }
-            }
-        }
+        outer: for(let r = 1; r <= searchRadius; r++) { for(let dy = -r; dy <= r; dy++) { for(let dx = -r; dx <= r; dx++) { let nx = ex + dx, ny = ey + dy; if (nx >= 0 && nx < gridWidth && ny >= 0 && ny < gridHeight && grid[ny * gridWidth + nx] === 1) { startX = nx; startY = ny; break outer; } } } }
     }
     if (startX !== -1) {
-        let q = new Int32Array(gridWidth * gridHeight * 2);
-        let head = 0, tail = 0; q[tail++] = startX; q[tail++] = startY; grid[startY * gridWidth + startX] = 2;
+        let q = new Int32Array(gridWidth * gridHeight * 2); let head = 0, tail = 0; q[tail++] = startX; q[tail++] = startY; grid[startY * gridWidth + startX] = 2;
         const dx = [0, 0, -1, 1], dy = [-1, 1, 0, 0];
         while (head < tail) {
             let cx = q[head++], cy = q[head++];
-            for (let i = 0; i < 4; i++) {
-                let nx = cx + dx[i], ny = cy + dy[i];
-                if (nx >= 0 && nx < gridWidth && ny >= 0 && ny < gridHeight && grid[ny * gridWidth + nx] === 1) { grid[ny * gridWidth + nx] = 2; q[tail++] = nx; q[tail++] = ny; }
-            }
+            for (let i = 0; i < 4; i++) { let nx = cx + dx[i], ny = cy + dy[i]; if (nx >= 0 && nx < gridWidth && ny >= 0 && ny < gridHeight && grid[ny * gridWidth + nx] === 1) { grid[ny * gridWidth + nx] = 2; q[tail++] = nx; q[tail++] = ny; } }
         }
     }
     let currentPlayable = 0; let territoryCapturedSuccessfully = false; 
     for (let i = 0; i < grid.length; i++) {
-        if (grid[i] === 1) { grid[i] = 0; territoryCapturedSuccessfully = true; }
-        else if (grid[i] === 2) { grid[i] = 1; currentPlayable++; }
+        if (grid[i] === 1) { grid[i] = 0; territoryCapturedSuccessfully = true; } else if (grid[i] === 2) { grid[i] = 1; currentPlayable++; }
     }
     for (let y = 0; y < gridHeight; y++) {
         for (let x = 0; x < gridWidth; x++) {
             let idx = y * gridWidth + x;
             if (grid[idx] === 3 || grid[idx] === 4) {
                 let isEdge = false;
-                for (let oy = -1; oy <= 1; oy++) {
-                    for (let ox = -1; ox <= 1; ox++) { let nx = x + ox, ny = y + oy; if (nx >= 0 && nx < gridWidth && ny >= 0 && ny < gridHeight && grid[ny * gridWidth + nx] === 0) isEdge = true; }
-                }
+                for (let oy = -1; oy <= 1; oy++) { for (let ox = -1; ox <= 1; ox++) { let nx = x + ox, ny = y + oy; if (nx >= 0 && nx < gridWidth && ny >= 0 && ny < gridHeight && grid[ny * gridWidth + nx] === 0) isEdge = true; } }
                 grid[idx] = isEdge ? 3 : 4;
             }
         }
     }
     renderGridToBg();
-    
     if (territoryCapturedSuccessfully) { playCaptureProceduralSound(); } else if (lineDrawn) { playWhiteLineProceduralSound(); }
     
     currentPercentage = Math.floor(((totalPlayablePixels - currentPlayable) / totalPlayablePixels) * 100);
     if (areaDisplay) areaDisplay.innerText = currentPercentage; 
     
     if (currentPercentage >= stages[currentStageIndex].goal) {
-        if (currentStageIndex >= stages.length - 1) {
-            stopBGM(); playAllClearSequence();
-        } else {
-            gameState = 'clear'; stopBGM(); playSoundRobust(audioElements.clear);
-        }
+        if (currentStageIndex >= stages.length - 1) { stopBGM(); playAllClearSequence(); } 
+        else { gameState = 'clear'; stopBGM(); playSoundRobust(audioElements.clear); }
     }
 }
 
@@ -377,33 +293,22 @@ function checkCollision() {
     if (player.isDrawing && player.path.length > 0) {
         let hitRadius = enemy.size / 2.5; 
         for (let i = 0; i < player.path.length; i++) {
-            let p1 = player.path[i];
-            let p2 = (i === player.path.length - 1) ? { x: Math.floor(player.x + player.size/2), y: Math.floor(player.y + player.size/2) } : player.path[i + 1];
+            let p1 = player.path[i]; let p2 = (i === player.path.length - 1) ? { x: Math.floor(player.x + player.size/2), y: Math.floor(player.y + player.size/2) } : player.path[i + 1];
             if (distToSegment(enemy.x, enemy.y, p1.x, p1.y, p2.x, p2.y) <= hitRadius) {
-                gameState = 'gameover_anim'; 
-                animationFrameCount = 0;
-                stopBGM(); 
-                // ★追加: 敵に当たってゲームオーバーになった瞬間にタイマーを止める
-                stopTimer();
-                playSoundRobust(audioElements.over);
-                break;
+                gameState = 'gameover_anim'; animationFrameCount = 0; stopBGM(); stopTimer(); playSoundRobust(audioElements.over); break;
             }
         }
     }
 }
 
 function eraseWhiteLine(sx, sy) {
-    let q = new Int32Array(gridWidth * gridHeight * 2); let head = 0, tail = 0;
-    q[tail++] = sx; q[tail++] = sy; grid[sy * gridWidth + sx] = 1;
+    let q = new Int32Array(gridWidth * gridHeight * 2); let head = 0, tail = 0; q[tail++] = sx; q[tail++] = sy; grid[sy * gridWidth + sx] = 1;
     const dx = [0, 0, -1, 1, -1, -1, 1, 1]; const dy = [-1, 1, 0, 0, -1, 1, -1, 1];
     while(head < tail) {
         let cx = q[head++]; let cy = q[head++];
         for(let i=0; i<8; i++) {
             let nx = cx + dx[i]; let ny = cy + dy[i];
-            if(nx >= 0 && nx < gridWidth && ny >= 0 && ny < gridHeight) {
-                let idx = ny * gridWidth + nx;
-                if(grid[idx] === 4) { grid[idx] = 1; q[tail++] = nx; q[tail++] = ny; }
-            }
+            if(nx >= 0 && nx < gridWidth && ny >= 0 && ny < gridHeight) { let idx = ny * gridWidth + nx; if(grid[idx] === 4) { grid[idx] = 1; q[tail++] = nx; q[tail++] = ny; } }
         }
     }
 }
@@ -448,23 +353,34 @@ function drawCoolText(text, x, y, baseFontSize, hasGradient = true, weight = 'bo
     ctx.textAlign = 'center'; ctx.lineWidth = Math.max(3, fontSize / 8); ctx.strokeStyle = '#000'; ctx.strokeText(text, x, y);
     ctx.shadowColor = 'rgba(0, 0, 0, 0.8)'; ctx.shadowBlur = 10; ctx.shadowOffsetX = 5; ctx.shadowOffsetY = 5;
     
-    if (hasGradient) {
-        let gradient = ctx.createLinearGradient(0, y - fontSize, 0, y);
-        gradient.addColorStop(0, '#fff'); gradient.addColorStop(0.5, '#ffd700'); gradient.addColorStop(1, '#ff8c00'); ctx.fillStyle = gradient;
-    } else { ctx.fillStyle = overrideColor; }
-    
+    if (hasGradient) { let gradient = ctx.createLinearGradient(0, y - fontSize, 0, y); gradient.addColorStop(0, '#fff'); gradient.addColorStop(0.5, '#ffd700'); gradient.addColorStop(1, '#ff8c00'); ctx.fillStyle = gradient; } 
+    else { ctx.fillStyle = overrideColor; }
     ctx.fillText(text, x, y); ctx.shadowBlur = 0; ctx.shadowOffsetX = 0; ctx.shadowOffsetY = 0;
 }
 
-function gameLoop() {
+
+// ★修正: 120Hzスマホの爆速化を防ぐための、60FPS（フレームレート）固定ロジックを追加
+let lastFrameTime = 0;
+
+function gameLoop(timestamp) {
+    requestAnimationFrame(gameLoop);
+    
     if (!ctx) return;
+    if (!timestamp) timestamp = performance.now();
+    
+    // 前のフレームからの経過時間を計算
+    let deltaTime = timestamp - lastFrameTime;
+    // もし15ミリ秒（約60FPSのペース）経過していなければ、この回の処理をスキップ（爆速化防止）
+    if (deltaTime < 15) return; 
+    
+    // 次回の基準時間を更新（余剰時間を引き継ぐことで正確な60FPSを維持）
+    lastFrameTime = timestamp - (deltaTime % (1000/60)); 
+    
     animationFrameCount++; 
 
     if (gameState === 'start_screen') {
-        ctx.fillStyle = '#000'; ctx.fillRect(0, 0, gridWidth, gridHeight);
-        requestAnimationFrame(gameLoop); return;
+        ctx.fillStyle = '#000'; ctx.fillRect(0, 0, gridWidth, gridHeight); return;
     }
-
     if (gameState === 'loading') { ctx.fillStyle = '#000'; ctx.fillRect(0, 0, gridWidth, gridHeight); } 
     else if (gameState === 'stage_start_anim') {
         ctx.drawImage(bgCanvas, 0, 0); drawCharacters();
@@ -507,37 +423,19 @@ function gameLoop() {
         if (gameState === 'all_clear_part2') {
             drawCoolText(t.thanks, gridWidth / 2, gridHeight / 2 + 30, 36, false, 'rough', '#fff');
             drawCoolText(t.freeTime, gridWidth / 2, gridHeight / 2 + 90, 48, false, 'rough', '#ff6666');
-            
-            // ★追加: エンディング画面での総経過時間（クリアタイム）の表示
-            let finalTime = updateTimerDisplay();
-            drawCoolText(`Clear Time: ${finalTime}`, gridWidth / 2, gridHeight / 2 + 150, 32, false, 'bold', '#ffd700');
-
+            let finalTime = updateTimerDisplay(); drawCoolText(`Clear Time: ${finalTime}`, gridWidth / 2, gridHeight / 2 + 150, 32, false, 'bold', '#ffd700');
             ctx.fillStyle = '#fff'; ctx.font = `20px ${getFontFamily('normal')}`; ctx.lineWidth = 1; ctx.strokeStyle = '#000';
-            ctx.strokeText(t.restart, gridWidth / 2, gridHeight / 2 + 210);
-            ctx.fillText(t.restart, gridWidth / 2, gridHeight / 2 + 210);
-
-            let subLink = document.getElementById('subscribeLink');
-            if(subLink && subLink.style.display !== 'block') { subLink.style.display = 'block'; }
+            ctx.strokeText(t.restart, gridWidth / 2, gridHeight / 2 + 210); ctx.fillText(t.restart, gridWidth / 2, gridHeight / 2 + 210);
+            let subLink = document.getElementById('subscribeLink'); if(subLink && subLink.style.display !== 'block') { subLink.style.display = 'block'; }
         }
     }
-    requestAnimationFrame(gameLoop);
 }
 
 async function loadStage(index) {
     const MAX_STAGES = stages.length; 
-
-    let subLink = document.getElementById('subscribeLink');
-    if(subLink) subLink.style.display = 'none';
-
-    if (index >= MAX_STAGES) {
-        gameState = 'all_clear'; stopAllSounds(); playAllClearSequence(); return;
-    }
-
-    // ★追加: Stage 1（最初）から始まる時のみ、タイマーをリセットして再スタートする
-    if (index === 0) {
-        resetTimer();
-        startTimer();
-    }
+    let subLink = document.getElementById('subscribeLink'); if(subLink) subLink.style.display = 'none';
+    if (index >= MAX_STAGES) { gameState = 'all_clear'; stopAllSounds(); playAllClearSequence(); return; }
+    if (index === 0) { resetTimer(); startTimer(); }
 
     let stageDef = stages[index];
     if (!stageDef) { stages[index] = { goal: 75, enemySpeed: Math.min(8, 4 + Math.floor(index / 10)) }; stageDef = stages[index]; }
@@ -614,51 +512,80 @@ function setupInputListeners() {
     });
     window.addEventListener('keyup', (e) => { if (keys.hasOwnProperty(e.key)) keys[e.key] = false; });
     window.addEventListener('mousedown', (e) => {
-        if (e.target.id === 'dragHandle' || e.target.id === 'dpadContainer' || e.target.id === 'startScreen' || e.target.closest('#startScreen') || e.target.id === 'subscribeLink') return;
+        if (e.target.closest('#dpadContainer') || e.target.closest('#startScreen') || e.target.id === 'subscribeLink') return;
         handleScreenClick();
     });
     window.addEventListener('touchstart', (e) => {
-        if (e.target.id === 'dragHandle' || e.target.id === 'dpadContainer' || e.target.id === 'startScreen' || e.target.closest('#startScreen') || e.target.id === 'subscribeLink') return;
+        if (e.target.closest('#dpadContainer') || e.target.closest('#startScreen') || e.target.id === 'subscribeLink') return;
         handleScreenClick();
     }, {passive: false});
 
-    const dragHandle = document.getElementById('dragHandle'); const dpadContainer = document.getElementById('dpadContainer');
-    if (dragHandle) { dragHandle.addEventListener('mousedown', startUIDrag); dragHandle.addEventListener('touchstart', startUIDrag, {passive: false}); }
-    if (dpadContainer) { dpadContainer.addEventListener('mousedown', startDirectionInput); dpadContainer.addEventListener('touchstart', startDirectionInput, {passive: false}); }
-    window.addEventListener('mousemove', handleUIMove); window.addEventListener('touchmove', handleUITouchMove, {passive: false});
-    window.addEventListener('mouseup', endUIAction); window.addEventListener('touchend', endUIAction);
+    // ★修正: 十字キーのイベントリスナー（ドラッグ処理を完全廃止・指を離した時のタッチキャンセル処理を徹底追加）
+    const dpadContainer = document.getElementById('dpadContainer');
+    if (dpadContainer) { 
+        dpadContainer.addEventListener('mousedown', startDirectionInput); 
+        dpadContainer.addEventListener('touchstart', startDirectionInput, {passive: false}); 
+    }
+    
+    window.addEventListener('mousemove', handleUIMove); 
+    window.addEventListener('touchmove', handleUITouchMove, {passive: false});
+    
+    // 指を離した時、画面外に出た時に「確実に止める」ためのイベント群
+    window.addEventListener('mouseup', endUIAction); 
+    window.addEventListener('touchend', endUIAction, {passive: false});
+    window.addEventListener('touchcancel', endUIAction, {passive: false});
 }
 
 function handleScreenClick() {
     if (gameState === 'clear') { currentStageIndex++; loadStage(currentStageIndex); } 
-    else if (['gameover', 'all_clear', 'all_clear_part1', 'all_clear_part2'].includes(gameState)) {
-        currentStageIndex = 0; loadStage(currentStageIndex);
-    }
+    else if (['gameover', 'all_clear', 'all_clear_part1', 'all_clear_part2'].includes(gameState)) { currentStageIndex = 0; loadStage(currentStageIndex); }
 }
 
-let isUIDragging = false, isDirectionInput = false; let dragOffsetX = 0, dragOffsetY = 0;
-function startUIDrag(e) { 
-    isUIDragging = true; e.stopPropagation(); let dpadContainer = document.getElementById('dpadContainer');
-    let cx = e.type.includes('touch') ? e.touches[0].clientX : e.clientX; let cy = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
-    let rect = dpadContainer.getBoundingClientRect(); dragOffsetX = cx - rect.left; dragOffsetY = cy - rect.top;
-}
+let isDirectionInput = false; 
+
+// ★修正: タッチ位置が「十字キーの上かどうか」を正確に判定するロジック
 function startDirectionInput(e) { 
-    const dragHandle = document.getElementById('dragHandle'); if (e.target === dragHandle) return; 
-    isDirectionInput = true; if (gameState === 'start_screen') { startGameFromScreen(e); } else { unlockAudioContext(); }
-    let cx = e.type.includes('touch') ? e.touches[0].clientX : e.clientX; let cy = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
+    isDirectionInput = true; 
+    if (gameState === 'start_screen') { startGameFromScreen(e); } else { unlockAudioContext(); }
+    
+    let cx, cy;
+    if (e.type.includes('touch')) {
+        for (let i = 0; i < e.touches.length; i++) {
+            if (e.touches[i].target.closest('#dpadContainer')) { cx = e.touches[i].clientX; cy = e.touches[i].clientY; break; }
+        }
+        if (cx === undefined) { cx = e.touches[0].clientX; cy = e.touches[0].clientY; }
+    } else { cx = e.clientX; cy = e.clientY; }
+    
     updateDirection(cx, cy);
+    e.preventDefault(); 
 }
-function handleUIMove(e) { handleMoveGeneric(e.clientX, e.clientY); }
-function handleUITouchMove(e) { if (isUIDragging || isDirectionInput) e.preventDefault(); if(e.touches.length > 0) handleMoveGeneric(e.touches[0].clientX, e.touches[0].clientY); }
-function handleMoveGeneric(cx, cy) { 
-    let dpadContainer = document.getElementById('dpadContainer');
-    if (isUIDragging && dpadContainer) {
-        let containerRect = document.getElementById('gameContainer').getBoundingClientRect();
-        dpadContainer.style.left = (cx - containerRect.left - dragOffsetX) + 'px'; dpadContainer.style.top = (cy - containerRect.top - dragOffsetY) + 'px';
-        dpadContainer.style.right = 'auto'; dpadContainer.style.bottom = 'auto';
-    } else if (isDirectionInput) { updateDirection(cx, cy); }
+
+function handleUIMove(e) { if (isDirectionInput) { handleMoveGeneric(e.clientX, e.clientY); } }
+function handleUITouchMove(e) { 
+    if (isDirectionInput) { 
+        e.preventDefault(); 
+        let cx, cy;
+        for (let i = 0; i < e.touches.length; i++) {
+            if (e.touches[i].target.closest('#dpadContainer')) { cx = e.touches[i].clientX; cy = e.touches[i].clientY; break; }
+        }
+        if (cx !== undefined) { handleMoveGeneric(cx, cy); } 
+        else { handleMoveGeneric(e.touches[0].clientX, e.touches[0].clientY); }
+    } 
 }
-function endUIAction() { isUIDragging = false; isDirectionInput = false; keys.ArrowUp = false; keys.ArrowDown = false; keys.ArrowLeft = false; keys.ArrowRight = false; }
+
+function handleMoveGeneric(cx, cy) { if (isDirectionInput) { updateDirection(cx, cy); } }
+
+// ★修正: 指を離したら「完全にキー入力をリセットする」堅牢な処理
+function endUIAction(e) { 
+    if (e && e.type.includes('touch') && e.touches.length > 0) {
+        let stillTouchingDpad = false;
+        for(let i=0; i<e.touches.length; i++){ if(e.touches[i].target.closest('#dpadContainer')){ stillTouchingDpad = true; break; } }
+        if (stillTouchingDpad) return; // まだ十字キーの上に別の指がある場合は止めない
+    }
+    isDirectionInput = false; 
+    keys.ArrowUp = false; keys.ArrowDown = false; keys.ArrowLeft = false; keys.ArrowRight = false; 
+}
+
 function updateDirection(cx, cy) { 
     let dpadContainer = document.getElementById('dpadContainer'); if(!dpadContainer) return;
     let rect = dpadContainer.getBoundingClientRect(); let centerX = rect.left + rect.width / 2; let centerY = rect.top + rect.height / 2;
@@ -735,9 +662,7 @@ function updateEnemy() {
     enemy.x += enemy.speedX; enemy.y += enemy.speedY;
 }
 
-// 起動時にHTMLテキストへ翻訳データを反映
 window.addEventListener('DOMContentLoaded', () => {
-    // ★修正: 説明文に<br>タグを含めるため innerHTML を使用
     document.getElementById('uiDesc').innerHTML = t.desc;
     document.getElementById('startMsg').innerText = t.startMsg;
     document.getElementById('gameDescLink').innerText = t.link;
@@ -750,5 +675,5 @@ window.addEventListener('DOMContentLoaded', () => {
     if (!ctx) return;
     setupStateSoundSources(); 
     setupInputListeners();
-    gameLoop();
+    requestAnimationFrame(gameLoop);
 });

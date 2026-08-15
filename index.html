@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Enjoy Cats Panic</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -18,12 +18,11 @@
             margin: 0;
             padding: 0;
             width: 100vw;
-            height: 100vh;
+            height: 100dvh; /* スマホのアドレスバー分を正確に計算する新単位 */
             overflow: hidden; 
-            touch-action: manipulation;
+            touch-action: none; /* スワイプによるブラウザの戻る操作を完全に防止 */
         }
 
-        /* ★追加: 全体を横並びにするラッパー */
         #mainWrapper {
             display: flex;
             flex-direction: row;
@@ -32,9 +31,10 @@
             width: 100%;
             height: 100%;
             gap: 15px;
+            box-sizing: border-box;
+            padding: 10px;
         }
 
-        /* ★追加: 左側パネル（タイトル・説明） */
         #leftPanel {
             display: flex;
             flex-direction: column;
@@ -44,7 +44,6 @@
             text-align: center;
         }
 
-        /* ★追加: 右側パネル（情報・タイム） */
         #rightPanel {
             display: flex;
             flex-direction: column;
@@ -53,82 +52,41 @@
             width: 100px;
         }
 
-        /* タイトルのデザイン（3行化に合わせて調整） */
         #uiTitle {
-            margin: 0 0 20px 0;
-            font-size: 26px;
+            margin: 0 0 20px 0; font-size: 26px;
             font-family: 'Dela Gothic One', 'Reggae One', sans-serif;
-            letter-spacing: 1px;
-            line-height: 1.2;
-            color: #5599ff;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            letter-spacing: 1px; line-height: 1.2; color: #5599ff; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
         }
 
-        /* 説明文のデザイン */
-        #uiDesc {
-            margin: 0;
-            font-size: 13px;
-            font-weight: bold;
-            line-height: 1.8;
-            color: #ddd;
-        }
+        #uiDesc { margin: 0; font-size: 13px; font-weight: bold; line-height: 1.8; color: #ddd; }
 
-        /* ステータス情報用のブロックデザイン */
         .statBox {
             background-color: rgba(0, 0, 0, 0.6); 
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-radius: 8px;
-            padding: 8px 5px;
-            margin-bottom: 12px;
-            width: 100%;
-            text-align: center;
-            box-sizing: border-box;
+            border: 2px solid rgba(255, 255, 255, 0.3); border-radius: 8px;
+            padding: 8px 5px; margin-bottom: 12px; width: 100%;
+            text-align: center; box-sizing: border-box;
         }
-        .statLabel {
-            font-size: 12px;
-            color: #aaa;
-            margin-bottom: 4px;
-            font-weight: bold;
-        }
-        .statValue {
-            font-size: 18px;
-            font-weight: bold;
-            color: #fff;
-        }
-        .statTime {
-            color: #ffd700; /* 時間だけ目立つように黄色に */
-        }
+        .statLabel { font-size: 12px; color: #aaa; margin-bottom: 4px; font-weight: bold; }
+        .statValue { font-size: 18px; font-weight: bold; color: #fff; }
+        .statTime { color: #ffd700; }
 
         #gameContainer {
-            position: relative;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            position: relative; display: flex; justify-content: center; align-items: center;
         }
 
-        /* キャンバス（ゲーム画面）の4:3固定と最大化設定 */
         canvas {
-            background-color: #000;
-            border: 2px solid #555;
-            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            background-color: #000; border: 2px solid #555; box-shadow: 0 0 10px rgba(0,0,0,0.5);
             display: block;
-            /* 左右のパネル(約250px)と余白を引いた幅を最大幅とする */
-            max-width: calc(100vw - 280px); 
-            max-height: 96vh; 
-            width: auto;
-            height: auto;
-            aspect-ratio: 4 / 3;
-            object-fit: contain;
+            max-width: calc(100vw - 280px); /* 左右パネルの幅を引く */
+            max-height: 94dvh; 
+            width: auto; height: auto;
+            aspect-ratio: 4 / 3; object-fit: contain;
         }
         
         #startScreen {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.85);
-            display: flex; flex-direction: column;
-            align-items: center; justify-content: center;
-            z-index: 100; cursor: pointer; color: white;
-            text-align: center;
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85); display: flex; flex-direction: column;
+            align-items: center; justify-content: center; z-index: 100; cursor: pointer; color: white; text-align: center;
         }
         #startScreen h1 { font-size: 48px; margin: 0 0 10px 0; color: #5599ff; font-family: 'Dela Gothic One', sans-serif; }
         #startScreen p { font-size: 24px; animation: blink 1.5s infinite; font-weight: bold; }
@@ -136,53 +94,52 @@
 
         #disclaimer { margin-top: 30px; font-size: 12px; color: #aaa; line-height: 1.5; font-weight: normal; animation: none; }
         #gameDescLink { margin-top: 30px; font-size: 18px; color: #ffcc00; text-decoration: none; border: 2px solid #ffcc00; padding: 10px 25px; border-radius: 8px; background: rgba(0, 0, 0, 0.5); transition: all 0.3s; font-family: sans-serif; z-index: 101; }
-        #gameDescLink:hover { background: #ffcc00; color: #000; font-weight: bold; }
-
+        
         #subscribeLink {
             display: none; position: absolute; bottom: 25px; left: 50%; transform: translateX(-50%);
             font-size: 18px; color: #fff; text-decoration: none; border: 2px solid #ff0000;
             padding: 8px 25px; border-radius: 8px; background: rgba(204, 0, 0, 0.8);
-            transition: all 0.3s; font-family: sans-serif; z-index: 101; font-weight: bold;
+            z-index: 101; font-weight: bold;
         }
-        #subscribeLink:hover { background: #ff0000; box-shadow: 0 0 15px rgba(255, 0, 0, 0.8); }
 
+        /* 十字キーを画面右下に「固定」し、ドラッグ移動を廃止して誤操作を防ぐ */
         #dpadContainer {
-            position: absolute; bottom: 20px; right: 20px; width: 120px; height: 120px;
+            position: fixed; bottom: 15px; right: 15px; width: 140px; height: 140px;
             border-radius: 50%; background: rgba(255, 255, 255, 0.1); border: 2px solid rgba(255, 255, 255, 0.3);
-            z-index: 10; touch-action: none; cursor: pointer;
+            z-index: 200; touch-action: none; cursor: pointer;
             background-image: linear-gradient(0deg, transparent 49%, rgba(255,255,255,0.15) 49%, rgba(255,255,255,0.15) 51%, transparent 51%), linear-gradient(90deg, transparent 49%, rgba(255,255,255,0.15) 49%, rgba(255,255,255,0.15) 51%, transparent 51%);
         }
-        #dragHandle {
+        #dpadCenter {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 44px; height: 44px; background: rgba(100, 150, 255, 0.6); border-radius: 50%;
-            display: flex; justify-content: center; align-items: center; color: white; font-size: 18px; cursor: move; user-select: none;
+            width: 40px; height: 40px; background: rgba(100, 150, 255, 0.8); border-radius: 50%;
+            pointer-events: none; /* タッチイベントを貫通させる */
         }
 
-        /* 縦向きで持った場合のレイアウト崩れ防止フォールバック */
+        /* 縦向き用のレイアウト重なり防止処理 */
         @media (orientation: portrait) {
-            #mainWrapper { flex-direction: column; gap: 10px; }
-            #leftPanel { width: 100%; flex-direction: row; justify-content: space-evenly; margin-bottom: 5px; }
-            #rightPanel { width: 100%; flex-direction: row; justify-content: space-evenly; gap: 5px;}
+            #mainWrapper { flex-direction: column; justify-content: center; gap: 5px; padding: 5px; }
+            #leftPanel { width: 98%; flex-direction: row; justify-content: space-evenly; align-items: center; margin-bottom: 2px; }
+            #rightPanel { width: 98%; flex-direction: row; justify-content: space-evenly; gap: 5px; margin-top: 2px; }
             #uiTitle { font-size: 18px; line-height: 1; margin: 0; text-align: left; }
-            #uiDesc { display: none; } /* 縦向きの時は説明文を隠す */
-            .statBox { margin-bottom: 0; padding: 5px; border-width: 1px; }
+            #uiDesc { display: none; } 
+            .statBox { margin-bottom: 0; padding: 4px; border-width: 1px; width: 23%; }
             .statLabel { font-size: 10px; margin-bottom: 2px; }
             .statValue { font-size: 14px; }
-            canvas { max-width: 98vw; max-height: 65vh; }
+            canvas {
+                max-width: 98vw;
+                max-height: 55dvh; /* 縦画面の時はキャンバスの高さを半分に抑えて重なりを防ぐ */
+            }
+            #dpadContainer { bottom: 10px; right: 10px; width: 120px; height: 120px; }
         }
     </style>
 </head>
 <body>
     <div id="mainWrapper">
-        <!-- ★追加: 左側パネル -->
         <div id="leftPanel">
-            <!-- タイトルを3行で固定 -->
             <h1 id="uiTitle">Enjoy<br>Cats<br>Panic</h1>
-            <!-- 説明文（JavaScript側で5～6行に翻訳挿入されます） -->
             <p id="uiDesc"></p>
         </div>
         
-        <!-- ★追加: 中央ゲームエリア -->
         <div id="gameContainer">
             <div id="startScreen">
                 <h1 id="startTitle">Enjoy Cats Panic</h1>
@@ -205,31 +162,18 @@
             <audio id="audioAllClear" preload="auto"></audio>
             <audio id="audioCapture" preload="auto"></audio> 
             <audio id="audioShock" preload="auto"></audio> 
-            
-            <div id="dpadContainer">
-                <div id="dragHandle" title="ドラッグして移動">✥</div>
-            </div>
         </div>
 
-        <!-- ★追加: 右側パネル -->
         <div id="rightPanel">
-            <div class="statBox">
-                <div id="uiStage" class="statLabel">Stage</div>
-                <div id="stageDisplay" class="statValue">01</div>
-            </div>
-            <div class="statBox">
-                <div id="uiArea" class="statLabel">Area</div>
-                <div class="statValue"><span id="areaDisplay">0</span>%</div>
-            </div>
-            <div class="statBox">
-                <div id="uiGoal" class="statLabel">Goal</div>
-                <div class="statValue"><span id="goalDisplay">75</span>%</div>
-            </div>
-            <div class="statBox">
-                <!-- 時間表示用のブロック -->
-                <div id="uiTime" class="statLabel">Time</div>
-                <div id="timeDisplay" class="statValue statTime">00:00</div>
-            </div>
+            <div class="statBox"><div id="uiStage" class="statLabel">Stage</div><div id="stageDisplay" class="statValue">01</div></div>
+            <div class="statBox"><div id="uiArea" class="statLabel">Area</div><div class="statValue"><span id="areaDisplay">0</span>%</div></div>
+            <div class="statBox"><div id="uiGoal" class="statLabel">Goal</div><div class="statValue"><span id="goalDisplay">75</span>%</div></div>
+            <div class="statBox"><div id="uiTime" class="statLabel">Time</div><div id="timeDisplay" class="statValue statTime">00:00</div></div>
+        </div>
+
+        <!-- 固定された十字キー -->
+        <div id="dpadContainer">
+            <div id="dpadCenter"></div>
         </div>
     </div>
 
