@@ -4,7 +4,7 @@ const i18n = {
     ko: { desc: '방향키나<br>패드로<br>이동하여<br>75% 이상<br>영토를<br>차지하세요!', startMsg: '화면을 클릭하여 전투 시작!', link: '게임 설명은 여기를 클릭', battleStart: '전투 시작!', clear: '완전 승리!', next: '클릭 또는 Enter 키로 다음 스테이지로', defeat: '패배...', retry: '클릭 또는 Enter 키로 재시도', allClear: '모든 스테이지 클리어!!', thanks: '플레이해주셔서 감사합니다!', freeTime: '시간이 참 많으신가 보네요!', restart: '클릭 또는 Enter 키로 처음부터', stage: 'Stage', area: 'Area', goal: 'Goal', time: 'Time', subscribe: '구독하기' },
     'zh-tw': { desc: '使用方向鍵<br>或搖桿移動<br>佔領<br>75%以上的<br>領地！', startMsg: '點擊螢幕開始戰鬥！', link: '遊戲說明請點此', battleStart: '戰鬥開始！', clear: '完全勝利！', next: '點擊或按 Enter 鍵進入下一關', defeat: '敗北⋯', retry: '點擊或按 Enter 鍵重試', allClear: '全關卡破關！！', thanks: '感謝遊玩！', freeTime: '看來你真的很閒呢！', restart: '點擊或按 Enter 鍵從頭開始', stage: 'Stage', area: 'Area', goal: 'Goal', time: 'Time', subscribe: '訂閱本頻道' },
     es: { desc: '¡Muévete con<br>flechas o pad<br>y captura<br>el 75%+<br>del área!', startMsg: '¡Haz clic para iniciar!', link: 'Instrucciones aquí', battleStart: '¡Empieza la batalla!', clear: '¡Victoria perfecta!', next: 'Haz clic o Enter para la siguiente fase', defeat: 'Derrota...', retry: 'Haz clic o Enter para reintentar', allClear: '¡Todas las fases superadas!', thanks: '¡Gracias por jugar!', freeTime: '¡Debes tener mucho tiempo libre!', restart: 'Haz clic o Enter para reiniciar', stage: 'Stage', area: 'Area', goal: 'Goal', time: 'Time', subscribe: 'Suscríbete aquí' },
-    pt: { desc: 'Mova com<br>as setas<br>ou pad<br>e capture<br>75%+<br>da área!', startMsg: 'Clique na tela para começar!', link: 'Instruções do jogo aqui', battleStart: 'Batalha começou!', clear: 'Vitória Perfeita!', next: 'Clique ou Enter para próxima fase', defeat: 'Derrota...', retry: 'Clique ou Enter para tentar de novo', allClear: 'Todas as fases concluídas!!', thanks: 'Obrigado por jogar!', freeTime: 'Você deve ter muito tempo livre!', restart: 'Clique ou Enter para recomeçar', stage: 'Stage', area: 'Area', goal: 'Goal', time: 'Time', subscribe: 'Inscreva-se aqui' },
+    pt: { desc: 'Mova com<br>as setas<br>ou pad<br>e capture<br>75%+<br>da área!', startMsg: 'Clique na tela para começar!', link: 'Instruções do jogo aqui', battleStart: 'Batalha começou!', clear: 'Vitória Perfeita!', next: 'Clique ou Enter para próxima fase', defeat: 'Derrota...', retry: 'Clique ou Enter para tentar de novo', allClear: 'Todas as fases concluídas!!', thanks: 'Obrigado por jogar!', freeTime: 'Você deve ter muito tempo livre!', restart: 'Clique ou Enter recomeçar', stage: 'Stage', area: 'Area', goal: 'Goal', time: 'Time', subscribe: 'Inscreva-se aqui' },
     fr: { desc: 'Utilisez<br>les flèches<br>ou le pad<br>pour capturer<br>75%+ !', startMsg: 'Cliquez pour commencer !', link: 'Instructions du jeu ici', battleStart: 'Début du combat !', clear: 'Victoire parfaite !', next: 'Cliquez ou Entrée pour la suite', defeat: 'Défaite...', retry: 'Cliquez ou Entrée pour réessayer', allClear: 'Toutes les étapes terminées !!', thanks: 'Merci d\'avoir joué !', freeTime: 'Vous avez beaucoup de temps libre !', restart: 'Cliquez ou Entrée pour recommencer', stage: 'Stage', area: 'Area', goal: 'Goal', time: 'Time', subscribe: 'Abonnez-vous ici' },
     de: { desc: 'Bewege dich<br>mit Pfeilen<br>und erobere<br>75%+<br>der Fläche!', startMsg: 'Klicke zum Starten!', link: 'Spielanleitung hier', battleStart: 'Kampfbeginn!', clear: 'Perfekter Sieg!', next: 'Klicken oder Enter für nächste Stufe', defeat: 'Niederlage...', retry: 'Klicken oder Enter für Neustart', allClear: 'Alle Stufen abgeschlossen!!', thanks: 'Danke fürs Spielen!', freeTime: 'Du hast wohl viel Freizeit!', restart: 'Klicken oder Enter für Neustart', stage: 'Stage', area: 'Area', goal: 'Goal', time: 'Time', subscribe: 'Hier abonnieren' },
     it: { desc: 'Muoviti<br>con i tasti<br>e cattura<br>il 75%+<br>dell\'area!', startMsg: 'Clicca per iniziare!', link: 'Istruzioni qui', battleStart: 'Inizio battaglia!', clear: 'Vittoria perfetta!', next: 'Clicca o Invio per il prossimo livello', defeat: 'Sconfitta...', retry: 'Clicca o Invio per riprovare', allClear: 'Tutti i livelli completati!!', thanks: 'Grazie per aver giocato!', freeTime: 'Devi avere molto tempo libero!', restart: 'Clicca o Invio per ricominciare', stage: 'Stage', area: 'Area', goal: 'Goal', time: 'Time', subscribe: 'Iscriviti qui' },
@@ -49,6 +49,7 @@ const areaDisplay = document.getElementById('areaDisplay');
 const goalDisplay = document.getElementById('goalDisplay');
 const startScreen = document.getElementById('startScreen');
 const retryBtn = document.getElementById('retryButton'); 
+const mainWrapper = document.getElementById('mainWrapper'); 
 
 const audioElements = {
     bgm: document.getElementById('bgm'), start: document.getElementById('audioStart'), clear: document.getElementById('audioClear'),
@@ -487,17 +488,17 @@ function startGameFromScreen(e) {
     unlockAudioContext(); loadStage(currentStageIndex);
 }
 
-// ★修正: DPAD_STATESからpadding操作を削除し、純粋にサイズと位置のみをループさせます
+// ★修正: 1～7への切り替え配列を再構築（初期値を中央・大に設定）
 const DPAD_STATES = [
-    { size: 'dpad-small', pos: 'dpad-right' }, // 1) 右下・小
-    { size: 'dpad-large', pos: 'dpad-right' }, // 2) 右下・大
-    { size: 'dpad-small', pos: 'dpad-left' },  // 3) 左下・小
-    { size: 'dpad-large', pos: 'dpad-left' },  // 4) 左下・大
-    { size: 'dpad-small', pos: 'dpad-center' },// 5) 中央・小
-    { size: 'dpad-large', pos: 'dpad-center' },// 6) 中央・大
-    { size: 'dpad-xlarge', pos: 'dpad-center' }// 7) 中央・特大
+    { size: 'dpad-large', pos: 'dpad-center', padding: '10px 10px 10px 0px' }, // 1) 中央・大（初期値、小の2倍）
+    { size: 'dpad-xlarge', pos: 'dpad-center', padding: '10px 10px 10px 0px' },// 2) 中央・特大（小の3倍）
+    { size: 'dpad-small', pos: 'dpad-right', padding: '10px 10px 10px 0px' },  // 3) 右下・小
+    { size: 'dpad-large', pos: 'dpad-right', padding: '10px 10px 10px 0px' },  // 4) 右下・大
+    { size: 'dpad-small', pos: 'dpad-left', padding: '10px 10px 10px 0px' },   // 5) 左下・小
+    { size: 'dpad-large', pos: 'dpad-left', padding: '10px 10px 10px 0px' },   // 6) 左下・大
+    { size: 'dpad-small', pos: 'dpad-center', padding: '10px 10px 10px 0px' }  // 7) 中央・小
 ];
-let currentDpadStateIndex = 0;
+let currentDpadStateIndex = 0; // 0番目（中央・大）からスタート
 let lastTapTime = 0;
 
 function handleDpadDoubleClick(e) {
