@@ -27,12 +27,11 @@
             display: flex;
             flex-direction: row;
             align-items: center;
-            justify-content: center; /* 中央揃えに固定 */
+            justify-content: center; 
             width: 100%;
             height: 100%;
             gap: 15px;
             box-sizing: border-box;
-            /* ★修正: 初期値が「中央」のため、パディングの初期値を0に設定 */
             padding: 10px 10px 10px 0px; 
             transition: padding 0.2s ease-out;
         }
@@ -52,7 +51,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            width: 130px; /* 左パネルと同じ幅にしてキャンバスを画面中央に保つ */
+            width: 130px; 
             flex-shrink: 0;
         }
 
@@ -121,7 +120,6 @@
         }
         #startScreen h1 { font-size: 48px; margin: 0 0 10px 0; color: #5599ff; font-family: 'Dela Gothic One', sans-serif; display: none; }
         
-        /* ★修正: 「#startScreen p」の指定をやめ、「#startMsg」単体を狙い撃ちすることで優先順位のバグを解消 */
         #startMsg { font-size: 24px; animation: blink 1.5s infinite; font-weight: bold; margin: 0 0 15px 0; }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
 
@@ -142,11 +140,14 @@
             z-index: 200; touch-action: none; cursor: pointer;
             background-image: linear-gradient(0deg, transparent 49%, rgba(255,255,255,0.15) 49%, rgba(255,255,255,0.15) 51%, transparent 51%), linear-gradient(90deg, transparent 49%, rgba(255,255,255,0.15) 49%, rgba(255,255,255,0.15) 51%, transparent 51%);
             transition: all 0.2s ease-out; 
+            user-select: none; /* ★追加: PCダブルクリック時の青いテキスト選択を防止 */
+            -webkit-user-select: none;
         }
+        
         #dpadCenter {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
             width: 30%; height: 30%; background: rgba(100, 150, 255, 0.8); border-radius: 50%;
-            pointer-events: none;
+            pointer-events: auto; /* ★修正: 中心の丸をクリック検知可能にするために「auto」へ変更 */
         }
 
         .dpad-small { width: 120px; height: 120px; }
@@ -193,7 +194,6 @@
         
         <div id="gameContainer">
             <div id="startScreen">
-                <!-- ★修正: pタグのIDを #startMsg に統一 -->
                 <p id="startMsg">画面をクリックして戦闘開始！</p>
                 <a href="https://youtube.com/@enjoy-battlecats" target="_blank" id="gameDescLink">ゲーム説明はこちら</a>
                 <p id="disclaimer">
@@ -222,7 +222,6 @@
             <div class="statBox"><div id="uiTime" class="statLabel">Time</div><div id="timeDisplay" class="statValue statTime">00:00</div></div>
         </div>
 
-        <!-- ★修正: 初期状態のクラスを「dpad-large dpad-center (中央・大)」に変更 -->
         <div id="dpadContainer" class="dpad-large dpad-center">
             <div id="dpadCenter"></div>
         </div>
