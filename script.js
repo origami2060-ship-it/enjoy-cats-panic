@@ -1,4 +1,3 @@
-// --- 多言語辞書データ (13カ国語) ---
 const i18n = {
     ja: { desc: '矢印キー or<br>画面パッドで<br>移動して<br>陣地を<br>75%以上<br>奪い取れ！', startMsg: '画面をクリックして戦闘開始！', link: 'ゲーム説明はこちら', battleStart: '戦闘開始！', clear: '完全勝利！', next: 'クリック または Enterキー で次のステージへ', defeat: '敗北⋯', retry: 'クリック または Enterキー でリトライ', allClear: '全ステージクリア！！', thanks: '遊んでくれてありがとう！', freeTime: '結構暇なんだな！', restart: 'クリック または Enterキー で最初から', stage: 'Stage', area: 'Area', goal: 'Goal', time: 'Time', subscribe: 'チャンネル登録はこちら' },
     en: { desc: 'Move with<br>arrow keys<br>or D-pad<br>and capture<br>75%+<br>of the area!', startMsg: 'Click screen to start battle!', link: 'Game Instructions Here', battleStart: 'Battle Start!', clear: 'Perfect Victory!', next: 'Click or press Enter for next stage', defeat: 'Defeat...', retry: 'Click or press Enter to retry', allClear: 'All Stages Cleared!!', thanks: 'Thanks for playing!', freeTime: 'You must have a lot of free time!', restart: 'Click or press Enter to restart', stage: 'Stage', area: 'Area', goal: 'Goal', time: 'Time', subscribe: 'Subscribe here' },
@@ -358,22 +357,13 @@ function drawCoolText(text, x, y, baseFontSize, hasGradient = true, weight = 'bo
     ctx.fillText(text, x, y); ctx.shadowBlur = 0; ctx.shadowOffsetX = 0; ctx.shadowOffsetY = 0;
 }
 
-
-// ★修正: 120Hzスマホの爆速化を防ぐための、60FPS（フレームレート）固定ロジックを追加
 let lastFrameTime = 0;
-
 function gameLoop(timestamp) {
     requestAnimationFrame(gameLoop);
-    
     if (!ctx) return;
     if (!timestamp) timestamp = performance.now();
-    
-    // 前のフレームからの経過時間を計算
     let deltaTime = timestamp - lastFrameTime;
-    // もし15ミリ秒（約60FPSのペース）経過していなければ、この回の処理をスキップ（爆速化防止）
     if (deltaTime < 15) return; 
-    
-    // 次回の基準時間を更新（余剰時間を引き継ぐことで正確な60FPSを維持）
     lastFrameTime = timestamp - (deltaTime % (1000/60)); 
     
     animationFrameCount++; 
@@ -484,6 +474,37 @@ function startGameFromScreen(e) {
     unlockAudioContext(); loadStage(currentStageIndex);
 }
 
+// ★追加: 十字キーのカスタマイズ（ダブルクリック処理）ロジック
+const DPAD_STATES = [
+    { size: 'dpad-small', pos: 'dpad-right' }, // 1) 右下・小
+    { size: 'dpad-large', pos: 'dpad-right' }, // 2) 右下・大
+    { size: 'dpad-small', pos: 'dpad-left' },  // 3) 左下・小
+    { size: 'dpad-large', pos: 'dpad-left' },  // 4) 左下・大
+    { size: 'dpad-small', pos: 'dpad-center' },// 5) 中央・小
+    { size: 'dpad-large', pos: 'dpad-center' } // 6) 中央・大
+];
+let currentDpadStateIndex = 0;
+let lastTapTime = 0;
+
+function handleDpadDoubleClick(e) {
+    let currentTime = new Date().getTime();
+    let tapLength = currentTime - lastTapTime;
+    
+    // 300ミリ秒以内に2回連続でタップされたらダブルタップと判定
+    if (tapLength < 300 && tapLength > 0) {
+        e.preventDefault(); // ダブルタップによる画面拡大（ズーム）を防ぐ
+        currentDpadStateIndex = (currentDpadStateIndex + 1) % DPAD_STATES.length;
+        
+        const dpadContainer = document.getElementById('dpadContainer');
+        if (dpadContainer) {
+            dpadContainer.className = ''; // 一度すべてのクラスを消す
+            dpadContainer.classList.add(DPAD_STATES[currentDpadStateIndex].size);
+            dpadContainer.classList.add(DPAD_STATES[currentDpadStateIndex].pos);
+        }
+    }
+    lastTapTime = currentTime;
+}
+
 function setupInputListeners() {
     if (startScreen) { startScreen.addEventListener('click', startGameFromScreen); }
     window.addEventListener('keydown', (e) => {
@@ -520,17 +541,17 @@ function setupInputListeners() {
         handleScreenClick();
     }, {passive: false});
 
-    // ★修正: 十字キーのイベントリスナー（ドラッグ処理を完全廃止・指を離した時のタッチキャンセル処理を徹底追加）
     const dpadContainer = document.getElementById('dpadContainer');
     if (dpadContainer) { 
         dpadContainer.addEventListener('mousedown', startDirectionInput); 
         dpadContainer.addEventListener('touchstart', startDirectionInput, {passive: false}); 
+        // ダブルクリック（PC） / ダブルタップ（スマホ）両方に対応
+        dpadContainer.addEventListener('dblclick', handleDpadDoubleClick);
+        dpadContainer.addEventListener('touchend', handleDpadDoubleClick, {passive: false}); 
     }
     
     window.addEventListener('mousemove', handleUIMove); 
     window.addEventListener('touchmove', handleUITouchMove, {passive: false});
-    
-    // 指を離した時、画面外に出た時に「確実に止める」ためのイベント群
     window.addEventListener('mouseup', endUIAction); 
     window.addEventListener('touchend', endUIAction, {passive: false});
     window.addEventListener('touchcancel', endUIAction, {passive: false});
@@ -543,7 +564,6 @@ function handleScreenClick() {
 
 let isDirectionInput = false; 
 
-// ★修正: タッチ位置が「十字キーの上かどうか」を正確に判定するロジック
 function startDirectionInput(e) { 
     isDirectionInput = true; 
     if (gameState === 'start_screen') { startGameFromScreen(e); } else { unlockAudioContext(); }
@@ -557,7 +577,6 @@ function startDirectionInput(e) {
     } else { cx = e.clientX; cy = e.clientY; }
     
     updateDirection(cx, cy);
-    e.preventDefault(); 
 }
 
 function handleUIMove(e) { if (isDirectionInput) { handleMoveGeneric(e.clientX, e.clientY); } }
@@ -575,12 +594,11 @@ function handleUITouchMove(e) {
 
 function handleMoveGeneric(cx, cy) { if (isDirectionInput) { updateDirection(cx, cy); } }
 
-// ★修正: 指を離したら「完全にキー入力をリセットする」堅牢な処理
 function endUIAction(e) { 
-    if (e && e.type.includes('touch') && e.touches.length > 0) {
+    if (e && e.type.includes('touch') && e.touches && e.touches.length > 0) {
         let stillTouchingDpad = false;
         for(let i=0; i<e.touches.length; i++){ if(e.touches[i].target.closest('#dpadContainer')){ stillTouchingDpad = true; break; } }
-        if (stillTouchingDpad) return; // まだ十字キーの上に別の指がある場合は止めない
+        if (stillTouchingDpad) return; 
     }
     isDirectionInput = false; 
     keys.ArrowUp = false; keys.ArrowDown = false; keys.ArrowLeft = false; keys.ArrowRight = false; 

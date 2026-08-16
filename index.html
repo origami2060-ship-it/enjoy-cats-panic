@@ -18,9 +18,9 @@
             margin: 0;
             padding: 0;
             width: 100vw;
-            height: 100dvh; /* スマホのアドレスバー分を正確に計算する新単位 */
+            height: 100dvh; 
             overflow: hidden; 
-            touch-action: none; /* スワイプによるブラウザの戻る操作を完全に防止 */
+            touch-action: none; 
         }
 
         #mainWrapper {
@@ -77,7 +77,7 @@
         canvas {
             background-color: #000; border: 2px solid #555; box-shadow: 0 0 10px rgba(0,0,0,0.5);
             display: block;
-            max-width: calc(100vw - 280px); /* 左右パネルの幅を引く */
+            max-width: calc(100vw - 280px); 
             max-height: 94dvh; 
             width: auto; height: auto;
             aspect-ratio: 4 / 3; object-fit: contain;
@@ -85,15 +85,17 @@
         
         #startScreen {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.85); display: flex; flex-direction: column;
+            background: rgba(0, 0, 0, 0.95); /* 背景をより暗くして見やすく */
+            display: flex; flex-direction: column;
             align-items: center; justify-content: center; z-index: 100; cursor: pointer; color: white; text-align: center;
         }
         #startScreen h1 { font-size: 48px; margin: 0 0 10px 0; color: #5599ff; font-family: 'Dela Gothic One', sans-serif; }
         #startScreen p { font-size: 24px; animation: blink 1.5s infinite; font-weight: bold; }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
 
-        #disclaimer { margin-top: 30px; font-size: 12px; color: #aaa; line-height: 1.5; font-weight: normal; animation: none; }
-        #gameDescLink { margin-top: 30px; font-size: 18px; color: #ffcc00; text-decoration: none; border: 2px solid #ffcc00; padding: 10px 25px; border-radius: 8px; background: rgba(0, 0, 0, 0.5); transition: all 0.3s; font-family: sans-serif; z-index: 101; }
+        /* ★修正: 免責事項のフォントサイズを半分の6px相当に（スマホでは最小10px前後で描画されることが多いので極小指定） */
+        #disclaimer { margin-top: 30px; font-size: 8px; color: #888; line-height: 1.4; font-weight: normal; animation: none; padding: 0 10px; }
+        #gameDescLink { margin-top: 20px; font-size: 18px; color: #ffcc00; text-decoration: none; border: 2px solid #ffcc00; padding: 10px 25px; border-radius: 8px; background: rgba(0, 0, 0, 0.5); transition: all 0.3s; font-family: sans-serif; z-index: 101; }
         
         #subscribeLink {
             display: none; position: absolute; bottom: 25px; left: 50%; transform: translateX(-50%);
@@ -102,34 +104,55 @@
             z-index: 101; font-weight: bold;
         }
 
-        /* 十字キーを画面右下に「固定」し、ドラッグ移動を廃止して誤操作を防ぐ */
+        /* 十字キーの基本設定（JavaScriptで動的にクラスを付け替えてスタイルを変更します） */
         #dpadContainer {
-            position: fixed; bottom: 15px; right: 15px; width: 140px; height: 140px;
+            position: fixed; 
             border-radius: 50%; background: rgba(255, 255, 255, 0.1); border: 2px solid rgba(255, 255, 255, 0.3);
             z-index: 200; touch-action: none; cursor: pointer;
             background-image: linear-gradient(0deg, transparent 49%, rgba(255,255,255,0.15) 49%, rgba(255,255,255,0.15) 51%, transparent 51%), linear-gradient(90deg, transparent 49%, rgba(255,255,255,0.15) 49%, rgba(255,255,255,0.15) 51%, transparent 51%);
+            transition: all 0.2s ease-out; /* サイズや位置変更時のアニメーション */
         }
         #dpadCenter {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 40px; height: 40px; background: rgba(100, 150, 255, 0.8); border-radius: 50%;
-            pointer-events: none; /* タッチイベントを貫通させる */
+            width: 30%; height: 30%; background: rgba(100, 150, 255, 0.8); border-radius: 50%;
+            pointer-events: none;
         }
 
-        /* 縦向き用のレイアウト重なり防止処理 */
+        /* 十字キーの状態クラス群 */
+        .dpad-small { width: 120px; height: 120px; }
+        .dpad-large { width: 240px; height: 240px; }
+        .dpad-right { bottom: 15px; right: 15px; left: auto; transform: none; }
+        .dpad-left { bottom: 15px; left: 15px; right: auto; transform: none; }
+        .dpad-center { bottom: 15px; left: 50%; right: auto; transform: translateX(-50%); }
+
+        /* ★修正: 縦向き用のレイアウト改善 */
         @media (orientation: portrait) {
-            #mainWrapper { flex-direction: column; justify-content: center; gap: 5px; padding: 5px; }
-            #leftPanel { width: 98%; flex-direction: row; justify-content: space-evenly; align-items: center; margin-bottom: 2px; }
-            #rightPanel { width: 98%; flex-direction: row; justify-content: space-evenly; gap: 5px; margin-top: 2px; }
-            #uiTitle { font-size: 18px; line-height: 1; margin: 0; text-align: left; }
+            /* 全体を上部に寄せる */
+            #mainWrapper { flex-direction: column; justify-content: flex-start; padding-top: 5dvh; gap: 10px; }
+            
+            #leftPanel { width: 100%; flex-direction: row; justify-content: center; margin-bottom: 0; }
+            #rightPanel { width: 98%; flex-direction: row; justify-content: space-evenly; gap: 5px; margin-top: 0; }
+            
+            #uiTitle { font-size: 20px; line-height: 1.2; margin: 0; text-align: center; display: flex; gap: 10px; }
+            /* 縦向き時はタイトルを1行で横並びにする（Enjoy Cats Panic） */
+            #uiTitle br { display: none; }
             #uiDesc { display: none; } 
+            
             .statBox { margin-bottom: 0; padding: 4px; border-width: 1px; width: 23%; }
             .statLabel { font-size: 10px; margin-bottom: 2px; }
             .statValue { font-size: 14px; }
+            
             canvas {
                 max-width: 98vw;
-                max-height: 55dvh; /* 縦画面の時はキャンバスの高さを半分に抑えて重なりを防ぐ */
+                max-height: 50dvh; 
             }
-            #dpadContainer { bottom: 10px; right: 10px; width: 120px; height: 120px; }
+
+            /* 縦向き時のスタート画面内の重なりを防止 */
+            #startScreen { background: #222; } /* 透けさせず完全な背景色に */
+            #startScreen h1 { font-size: 36px; margin-top: -50px; }
+            #startScreen p { font-size: 18px; }
+            #gameDescLink { font-size: 14px; padding: 8px 16px; margin-top: 15px; }
+            #disclaimer { margin-top: 20px; }
         }
     </style>
 </head>
@@ -146,7 +169,8 @@
                 <p id="startMsg">画面をクリックして戦闘開始！</p>
                 <a href="https://youtube.com/@enjoy-battlecats" target="_blank" id="gameDescLink">ゲーム説明はこちら</a>
                 <p id="disclaimer">
-                    ※本作はファンによる非公式の二次創作ゲームであり、ポノス株式会社様および「にゃんこ大戦争」公式とは一切関係ありません。<br>
+                    <!-- ★修正: 「ファンによる」を削除 -->
+                    ※本作は非公式の二次創作ゲームであり、ポノス株式会社様および「にゃんこ大戦争」公式とは一切関係ありません。<br>
                     *This is an unofficial fan-made game and is not affiliated with PONOS Corp. or the official "The Battle Cats".
                 </p>
             </div>
@@ -171,8 +195,8 @@
             <div class="statBox"><div id="uiTime" class="statLabel">Time</div><div id="timeDisplay" class="statValue statTime">00:00</div></div>
         </div>
 
-        <!-- 固定された十字キー -->
-        <div id="dpadContainer">
+        <!-- ★修正: 初期状態のクラスを付与 (右下・小) -->
+        <div id="dpadContainer" class="dpad-small dpad-right">
             <div id="dpadCenter"></div>
         </div>
     </div>
