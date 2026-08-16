@@ -48,6 +48,7 @@ const stageDisplay = document.getElementById('stageDisplay');
 const areaDisplay = document.getElementById('areaDisplay');
 const goalDisplay = document.getElementById('goalDisplay');
 const startScreen = document.getElementById('startScreen');
+const retryBtn = document.getElementById('retryButton'); 
 
 const audioElements = {
     bgm: document.getElementById('bgm'), start: document.getElementById('audioStart'), clear: document.getElementById('audioClear'),
@@ -421,6 +422,16 @@ function gameLoop(timestamp) {
     }
 }
 
+function resetToStartScreen() {
+    stopTimer();
+    stopAllSounds();
+    gameState = 'start_screen';
+    currentStageIndex = 0;
+    if (startScreen) startScreen.style.display = 'flex';
+    if (retryBtn) retryBtn.style.display = 'none'; 
+    let subLink = document.getElementById('subscribeLink'); if(subLink) subLink.style.display = 'none';
+}
+
 async function loadStage(index) {
     const MAX_STAGES = stages.length; 
     let subLink = document.getElementById('subscribeLink'); if(subLink) subLink.style.display = 'none';
@@ -468,20 +479,23 @@ function startGameFromScreen(e) {
     if (e && e.target && e.target.id === 'gameDescLink') return;
     if (gameState !== 'start_screen') return;
     if (startScreen) startScreen.style.display = 'none';
+    if (retryBtn) retryBtn.style.display = 'block'; 
+    
     const elem = document.documentElement; 
     if (elem.requestFullscreen) { elem.requestFullscreen().catch(e => console.log(e)); } 
     else if (elem.webkitRequestFullscreen) { elem.webkitRequestFullscreen(); }
     unlockAudioContext(); loadStage(currentStageIndex);
 }
 
-// ★追加: 十字キーのカスタマイズ（ダブルクリック処理）ロジック
+// ★修正: DPAD_STATESからpadding操作を削除し、純粋にサイズと位置のみをループさせます
 const DPAD_STATES = [
     { size: 'dpad-small', pos: 'dpad-right' }, // 1) 右下・小
     { size: 'dpad-large', pos: 'dpad-right' }, // 2) 右下・大
     { size: 'dpad-small', pos: 'dpad-left' },  // 3) 左下・小
     { size: 'dpad-large', pos: 'dpad-left' },  // 4) 左下・大
     { size: 'dpad-small', pos: 'dpad-center' },// 5) 中央・小
-    { size: 'dpad-large', pos: 'dpad-center' } // 6) 中央・大
+    { size: 'dpad-large', pos: 'dpad-center' },// 6) 中央・大
+    { size: 'dpad-xlarge', pos: 'dpad-center' }// 7) 中央・特大
 ];
 let currentDpadStateIndex = 0;
 let lastTapTime = 0;
@@ -490,14 +504,13 @@ function handleDpadDoubleClick(e) {
     let currentTime = new Date().getTime();
     let tapLength = currentTime - lastTapTime;
     
-    // 300ミリ秒以内に2回連続でタップされたらダブルタップと判定
     if (tapLength < 300 && tapLength > 0) {
-        e.preventDefault(); // ダブルタップによる画面拡大（ズーム）を防ぐ
+        e.preventDefault(); 
         currentDpadStateIndex = (currentDpadStateIndex + 1) % DPAD_STATES.length;
         
         const dpadContainer = document.getElementById('dpadContainer');
         if (dpadContainer) {
-            dpadContainer.className = ''; // 一度すべてのクラスを消す
+            dpadContainer.className = ''; 
             dpadContainer.classList.add(DPAD_STATES[currentDpadStateIndex].size);
             dpadContainer.classList.add(DPAD_STATES[currentDpadStateIndex].pos);
         }
@@ -505,8 +518,25 @@ function handleDpadDoubleClick(e) {
     lastTapTime = currentTime;
 }
 
+let lastRetryTapTime = 0;
+function handleRetryDoubleClick(e) {
+    let currentTime = new Date().getTime();
+    let tapLength = currentTime - lastRetryTapTime;
+    if (tapLength < 300 && tapLength > 0) {
+        e.preventDefault(); 
+        resetToStartScreen();
+    }
+    lastRetryTapTime = currentTime;
+}
+
 function setupInputListeners() {
     if (startScreen) { startScreen.addEventListener('click', startGameFromScreen); }
+    
+    if (retryBtn) {
+        retryBtn.addEventListener('dblclick', handleRetryDoubleClick);
+        retryBtn.addEventListener('touchend', handleRetryDoubleClick, {passive: false});
+    }
+
     window.addEventListener('keydown', (e) => {
         if (gameState === 'start_screen') {
             if (['Enter', ' ', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
@@ -533,11 +563,11 @@ function setupInputListeners() {
     });
     window.addEventListener('keyup', (e) => { if (keys.hasOwnProperty(e.key)) keys[e.key] = false; });
     window.addEventListener('mousedown', (e) => {
-        if (e.target.closest('#dpadContainer') || e.target.closest('#startScreen') || e.target.id === 'subscribeLink') return;
+        if (e.target.closest('#dpadContainer') || e.target.closest('#startScreen') || e.target.id === 'subscribeLink' || e.target.id === 'retryButton') return;
         handleScreenClick();
     });
     window.addEventListener('touchstart', (e) => {
-        if (e.target.closest('#dpadContainer') || e.target.closest('#startScreen') || e.target.id === 'subscribeLink') return;
+        if (e.target.closest('#dpadContainer') || e.target.closest('#startScreen') || e.target.id === 'subscribeLink' || e.target.id === 'retryButton') return;
         handleScreenClick();
     }, {passive: false});
 
@@ -545,7 +575,6 @@ function setupInputListeners() {
     if (dpadContainer) { 
         dpadContainer.addEventListener('mousedown', startDirectionInput); 
         dpadContainer.addEventListener('touchstart', startDirectionInput, {passive: false}); 
-        // ダブルクリック（PC） / ダブルタップ（スマホ）両方に対応
         dpadContainer.addEventListener('dblclick', handleDpadDoubleClick);
         dpadContainer.addEventListener('touchend', handleDpadDoubleClick, {passive: false}); 
     }
