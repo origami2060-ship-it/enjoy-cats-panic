@@ -140,14 +140,14 @@
             z-index: 200; touch-action: none; cursor: pointer;
             background-image: linear-gradient(0deg, transparent 49%, rgba(255,255,255,0.15) 49%, rgba(255,255,255,0.15) 51%, transparent 51%), linear-gradient(90deg, transparent 49%, rgba(255,255,255,0.15) 49%, rgba(255,255,255,0.15) 51%, transparent 51%);
             transition: all 0.2s ease-out; 
-            user-select: none; /* ★追加: PCダブルクリック時の青いテキスト選択を防止 */
+            user-select: none; 
             -webkit-user-select: none;
         }
         
         #dpadCenter {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
             width: 30%; height: 30%; background: rgba(100, 150, 255, 0.8); border-radius: 50%;
-            pointer-events: auto; /* ★修正: 中心の丸をクリック検知可能にするために「auto」へ変更 */
+            pointer-events: auto; 
         }
 
         .dpad-small { width: 120px; height: 120px; }
@@ -195,7 +195,8 @@
         <div id="gameContainer">
             <div id="startScreen">
                 <p id="startMsg">画面をクリックして戦闘開始！</p>
-                <a href="https://youtube.com/@enjoy-battlecats" target="_blank" id="gameDescLink">ゲーム説明はこちら</a>
+                <!-- ★修正: ゲーム説明のリンクを新しいYouTube動画URLに変更 -->
+                <a href="https://youtu.com/aPDAXw4iW9Q" target="_blank" id="gameDescLink">ゲーム説明はこちら</a>
                 <p id="disclaimer">
                     ※本作は非公式の二次創作ゲームであり、ポノス株式会社様および「にゃんこ大戦争」公式とは一切関係ありません。<br>
                     *This is an unofficial fan-made game and is not affiliated with PONOS Corp. or the official "The Battle Cats".
